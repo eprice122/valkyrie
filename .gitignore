@@ -1,0 +1,11 @@
+## Files ##
+*.pyc
+*.code-workspace
+
+## Directories ##
+__pycache__
+.mypy_cache
+.env
+dependencies
+resources
+.aws
