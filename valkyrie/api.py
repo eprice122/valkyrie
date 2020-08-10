@@ -52,19 +52,6 @@ class Strategy(bt.Strategy):
                     raise ValueError
                 self.ctx[symbol][constructor["id"]] = indicator
 
-        self.bb = btind.BollingerBands(self.data)
-        self.test = self.data.close - self.data.open
-
-    def next(self):
-        if self.interupt_handler.is_set():
-            self.env.runstop()
-        for data in self.datas:
-            # self.buy(data=data, size=100,)
-            dt, dn = self.datetime.date(), data._name
-            pos = self.getposition(data).size
-            for order in self.orders:
-                order(data)
-
     def stop(self):
         for symbol, nodes in self.ctx.items():
             for id, node in nodes.items():

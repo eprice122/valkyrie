@@ -88,11 +88,15 @@ class Strategy(bt.Strategy):
 
 
 if __name__ == "__main__":
+    import time
+
+    start = time.time()
+
     api(
         d,
         market_config=MarketConfig(
             from_date=datetime(year=2014, month=1, day=1),
-            to_date=datetime(year=2014, month=1, day=2),
+            to_date=datetime(year=2014, month=1, day=10),
             timeframe=bt.TimeFrame.Minutes,
             symbols={"A", "AAPL", "F"},
         ),
@@ -100,23 +104,7 @@ if __name__ == "__main__":
         task_id="myId",
     )
 
-    cerebro = bt.Cerebro()
-    cerebro.addstrategy(Strategy)
+    end = time.time()
+    print(end - start)
 
-    # Create a Data Feed
-    data = MongoFeed()
-
-    # Add the Data Feed to Cerebro
-    cerebro.adddata(data)
-
-    # Set our desired cash start
-    cerebro.broker.setcash(100000.0)
-
-    # Print out the starting conditions
-    print("Starting Portfolio Value: %.2f" % cerebro.broker.getvalue())
-
-    # Run over everything
-    cerebro.run()
-
-    # Print out the final result
-    print("Final Portfolio Value: %.2f" % cerebro.broker.getvalue())
+    x = 0

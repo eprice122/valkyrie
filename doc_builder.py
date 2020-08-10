@@ -12,14 +12,13 @@ def build(fp):
     libraries = [data_docs, fundamental_docs, average_docs, basic_order_docs]
     dp = os.path.dirname(os.path.abspath(__file__))
 
-    """
     for library in libraries:
         for node in library.nodes:
             path = node.docs_path
-            del node.docs_path
-            with open(os.path.join(dp, path), "r") as g:
-                node.docs = g.read()
-    """
+            if path and path != "":
+                del node.docs_path
+                with open(os.path.join(dp, "valkyrie", "docs", path), "r") as g:
+                    node.docs = g.read()
 
     with open(fp, "w") as f:
         json.dump(libraries, f, default=lambda x: x.__dict__)
