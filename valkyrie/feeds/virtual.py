@@ -1,16 +1,20 @@
 import os
 from datetime import datetime, timedelta
+from threading import Event
 
 from backtrader import TimeFrame, date2num
 from backtrader.feed import DataBase
 from pymongo import MongoClient
 
+from .utils import get_documents
+
 
 class VirtualFeed(DataBase):
-    def __init__(self, symbol: str):
+    def __init__(self, symbol: str, interupt_handler: Event):
         super().__init__()
         self.timeframe: TimeFrame = self.params.timeframe
         self.symbol = symbol
+        self.interupt_handler = interupt_handler
 
     def start(self):
         pass
@@ -19,24 +23,20 @@ class VirtualFeed(DataBase):
         pass
 
     def _load(self):
+        if self.interupt_handler.is_set():
+            raise InterruptedError
         if self.timeframe == TimeFrame.Minutes:
             if self.minutes >= len(self.document["open"]):
                 self.minutes = 0
-                self.current_date = datetime(
-                    year=self.current_date.year,
-                    month=self.current_date.month,
-                    day=self.current_date.day,
-                    hour=9,
-                    minute=30,
-                    second=0,
-                )
-                self.current_date += timedelta(days=1)
                 if len(self.documents) > 0:
                     self.document = self.documents.pop(0)
                 else:
                     return False
 
-            self.lines.datetime[0] = date2num(self.current_date)
+            nine_thirty = 60 * 9.5
+            self.lines.datetime[0] = date2num(
+                self.document["date"] + timedelta(minutes=self.minutes + nine_thirty)
+            )
             self.lines.open[0] = self.document["open"][self.minutes]
             self.lines.high[0] = self.document["high"][self.minutes]
             self.lines.low[0] = self.document["low"][self.minutes]
@@ -44,46 +44,32 @@ class VirtualFeed(DataBase):
             self.lines.volume[0] = self.document["volume"][self.minutes]
             self.lines.openinterest[0] = 0
             self.minutes += 1
-            self.current_date += timedelta(minutes=1)
 
         elif self.timeframe == TimeFrame.Days:
-            if len(self.documents) > 0:
-                self.document = self.documents.pop(0)
-            else:
+            if not self.document:
                 return False
-            self.lines.datetime[0] = date2num(self.current_date)
+            self.lines.datetime[0] = date2num(self.document["date"])
             self.lines.open[0] = self.document["open"]
             self.lines.high[0] = self.document["high"]
             self.lines.low[0] = self.document["low"]
             self.lines.close[0] = self.document["close"]
             self.lines.volume[0] = self.document["volume"]
             self.lines.openinterest[0] = 0
-            self.current_date += timedelta(days=1)
+            if len(self.documents) > 0:
+                self.document = self.documents.pop(0)
+            else:
+                self.document = None
+
         # Say success
         return True
 
     def virtual_load(self):
-        client = MongoClient(
-            host=os.environ["MONGO_HOST"],
-            port=int(os.environ["MONGO_PORT"]),
-            username=os.environ["MONGO_MARKET_USER"],
-            password=os.environ["MONGO_MARKET_PWD"],
-            authSource="admin",
+        self.documents = get_documents(
+            timeframe=self.timeframe,
+            from_date=self.params.fromdate,
+            to_date=self.params.todate,
+            symbol=self.symbol,
         )
-        db = client["stockDB"]
-        if self.timeframe == TimeFrame.Minutes:
-            self.collection = db["oneMinuteTicks"]
-        elif self.timeframe == TimeFrame.Days:
-            self.collection = db["oneDayTicks"]
-        else:
-            raise ValueError
-        self.cursor = self.collection.find(
-            {
-                "symbol": self.symbol,
-                "date": {"$gte": self.params.fromdate, "$lt": self.params.todate},
-            }
-        )
-
         self.from_date = datetime(
             year=self.params.fromdate.year,
             month=self.params.fromdate.month,
@@ -100,7 +86,4 @@ class VirtualFeed(DataBase):
         self.minutes = 0
         self.current_date = self.from_date
 
-        self.documents = []
-        while self.cursor.alive:
-            self.documents.append(self.cursor.next())
         self.document = self.documents.pop(0)

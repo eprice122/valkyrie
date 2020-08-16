@@ -24,7 +24,7 @@
             "cwd": "${fileDirname}",
             "console": "integratedTerminal",
             "sudo": false,
-            "justMyCode": true
+            "justMyCode": false
         },
         {
             "name": "Bash-Debug File",

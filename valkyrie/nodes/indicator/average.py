@@ -15,7 +15,7 @@ simple_moving_average_docs = Node(
     key="simple_moving_average",
     label="Simple Moving Average",
     type="INDICATOR_NODE",
-    tooltip="Non-weighted average of the last n periods",
+    tooltip="Non-weighted average of the last n periods.",
     docs_path="simple_moving_average.md",
     parameters=[Parameter(key="period", label="Period", ui=IntegerUI())],
     inputs=[Input(key="inp")],
@@ -59,6 +59,22 @@ def weighted_moving_average(inp, period):
     return btind.WeightedAverage(inp, period=period)
 
 
+true_range_docs = Node(
+    key="true_range",
+    label="True Range",
+    type="INDICATOR_NODE",
+    tooltip="Gauges the volatility of the market during each tick.",
+    docs_path="true_range.md",
+    parameters=[],
+    inputs=[],
+    outputs=[Output(label="Output")],
+)
+
+
+def true_range():
+    return btind.TrueRange()
+
+
 average_docs = Module(
     key="average",
     label="Average",
@@ -68,5 +84,6 @@ average_docs = Module(
         simple_moving_average_docs,
         exponential_moving_average_docs,
         weighted_moving_average_docs,
+        true_range_docs,
     ],
 )

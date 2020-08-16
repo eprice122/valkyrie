@@ -11,6 +11,13 @@ def build_indicator(constructor: dict, nodes: dict):
                 kwargs[key] = getattr(nodes[value["node_id"]], value["port_id"])
             else:
                 kwargs[key] = nodes[value["node_id"]]
+        else:
+            kwargs[key] = set()
+            for value in props["value"]:
+                if value["port_id"] != "null":
+                    kwargs[key].add(getattr(nodes[value["node_id"]], value["port_id"]))
+                else:
+                    kwargs[key].add(nodes[value["node_id"]])
 
     indicator = parse_indicator(
         module_str=constructor["module_str"], node_str=constructor["node_str"]
@@ -18,8 +25,8 @@ def build_indicator(constructor: dict, nodes: dict):
     return indicator
 
 
-def build_beacon(self, constructor, nodes):
-    indicator = parse_beacon(
+def build_order(strategy, constructor, nodes):
+    indicator = parse_order(
         module_str=constructor["module_str"], node_str=constructor["node_str"]
     )
     kwargs = constructor["parameters"]
@@ -31,7 +38,7 @@ def build_beacon(self, constructor, nodes):
             kwargs[key] = nodes[value["node_id"]]
 
     def func(data):
-        return indicator(self=self, data=data, **kwargs)
+        return indicator(strategy=strategy, data=data, **kwargs)
 
     return func
 
@@ -40,7 +47,7 @@ def parse_indicator(module_str: str, node_str: str) -> Callable:
     return _parse(f"indicator.{module_str}", node_str)
 
 
-def parse_beacon(module_str: str, node_str: str) -> Callable:
+def parse_order(module_str: str, node_str: str) -> Callable:
     return _parse(f"order.{module_str}", node_str)
 
 
