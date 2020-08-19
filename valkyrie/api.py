@@ -3,22 +3,16 @@ import os
 import pickle
 import sys
 import time
-from collections import OrderedDict
 from threading import Event
 from typing import Dict
 
 import backtrader as bt
-import backtrader.analyzers as btanalyzers
 import boto3
-import pandas as pd
-import quantstats as qs
-import simplejson
 from backtrader import TimeFrame, num2date
 
+from .analyzers import add_analyzers, get_analyzers
 from .analyzers.cash_market import CashMarket
-from .configs import BrokerConfig, MarketConfig
-from .feeds.utils import get_benchmark
-from .feeds.virtual import VirtualFeed
+from .configs import BrokerConfig, MarketConfig, configure_broker, configure_market
 from .utils import build_indicator, build_order
 
 s3 = boto3.client("s3")
@@ -118,74 +112,13 @@ def api(
 
         configure_market(cerebro, market_config, interupt_handler)
         configure_broker(cerebro, broker_config)
-        initial_value = cerebro.broker.getvalue()
         add_analyzers(cerebro)
 
         # Run and collect strategy
         logger.info("Running cerebro")
         strategies = cerebro.run()
-        strat = strategies[0]
 
-        # Get analysis data from cerebro
-        sharpe = strat.analyzers.sharperatio.get_analysis()
-        returns = strat.analyzers.returns.get_analysis()
-        trade_analyzer = strat.analyzers.tradeanalyzer.get_analysis()
-
-        # Setup quantstats session
-        qs.extend_pandas()
-        cash_market = strat.analyzers.cashmarket.get_analysis()
-        df_values = pd.DataFrame(cash_market).T
-        df_values = df_values.iloc[:, 1]
-
-        benchmark = get_benchmark(
-            market_config.from_date, market_config.to_date, market_config.timeframe
-        )
-        greeks = qs.stats.greeks(df_values, benchmark)
-
-        # Get transactions and parse for json
-        transactions = strat.analyzers.transactions.get_analysis()
-        transactions = OrderedDict(
-            [(str(date), data) for date, data in transactions.items()]
-        )
-
-        # Get position values and parse for json
-        positions_value = strat.analyzers.positionsvalue.get_analysis()
-        positions_value = OrderedDict(
-            [(str(date), data) for date, data in positions_value.items()]
-        )
-
-        # Get position sizes and parse for json
-        # https://community.backtrader.com/topic/1454/getposition-size-inside-bt-observer
-        positions_size = OrderedDict()
-        # Header
-        positions_size["Datetime"] = list(positions_value["Datetime"])
-        prev_date = ""
-        index = dict(
-            [(symbol, idx) for idx, symbol in enumerate(positions_value["Datetime"])]
-        )
-        for i, date in enumerate(positions_value.keys()):
-            if i == 0:
-                # Skip header
-                continue
-            if i == 1:
-                # First tick
-                positions_size[date] = [0 for symbol in market_config.symbols]
-                prev_date = date
-            if i > 1:
-                # All following ticks
-                positions_size[date] = [v for v in positions_size[prev_date]]
-                prev_date = date
-            for transaction in transactions.get(date, []):
-                size = transaction[0]
-                symbol = transaction[3]
-                positions_size[date][index[symbol]] += size
-
-        # Get broker data
-        broker = {
-            "initial_value": initial_value,
-            "intermediate_value": [value[1] for value in cash_market.values()],
-            "final_value": cerebro.broker.getvalue(),
-        }
+        analyzers = get_analyzers(strategy=strategies[0], market_config=market_config)
 
         logger.info("Saving session to dynamoDB")
         data = {
@@ -193,15 +126,7 @@ def api(
                 str(num2date(cerebro.datas[0].datetime[-i]))
                 for i in reversed(range(0, len(cerebro.datas[0])))
             ],
-            "returns": returns,
-            "trade_analyzer": simplejson.loads(simplejson.dumps(trade_analyzer)),
-            "sharpe": sharpe["sharperatio"],
-            "transactions": transactions,
-            "broker": broker,
-            "positions_value": positions_value,
-            "position_size": positions_size,
-            "alpha": float(greeks.alpha),  # numpy type
-            "beta": float(greeks.beta),  # numpy type
+            "analyzers": analyzers,
         }
 
         s3.put_object(
@@ -211,35 +136,3 @@ def api(
     except InterruptedError:
         logger.info("Session Aborted")
     logger.info(f"Completed in {time.time() - start_time} seconds")
-
-
-def configure_market(cerebro, market_config, interupt_handler):
-    logger.info("Adding feeds to cerebro")
-    for symbol in market_config.symbols:
-        feed: VirtualFeed = VirtualFeed(
-            symbol=symbol,
-            fromdate=market_config.from_date,
-            todate=market_config.to_date,
-            timeframe=market_config.timeframe,
-            interupt_handler=interupt_handler,
-        )  # type: ignore
-        try:
-            feed.virtual_load()
-        except StopIteration:
-            continue
-        cerebro.adddata(feed, name=symbol)
-
-
-def configure_broker(cerebro, broker_config):
-    logger.info("Configuring Broker")
-    cerebro.broker.setcash(broker_config.cash)
-
-
-def add_analyzers(cerebro):
-    logger.info("Adding analyzers to cerebro")
-    cerebro.addanalyzer(btanalyzers.SharpeRatio, timeframe=bt.TimeFrame.Minutes)
-    cerebro.addanalyzer(btanalyzers.Returns, timeframe=bt.TimeFrame.Minutes)
-    cerebro.addanalyzer(btanalyzers.Transactions)
-    cerebro.addanalyzer(btanalyzers.TradeAnalyzer)
-    cerebro.addanalyzer(btanalyzers.PositionsValue, headers=True)
-    cerebro.addanalyzer(CashMarket)

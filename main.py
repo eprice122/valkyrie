@@ -92,10 +92,10 @@ if __name__ == "__main__":
     api(
         d,
         market_config=MarketConfig(
-            from_date=datetime(year=2014, month=1, day=3),
-            to_date=datetime(year=2014, month=1, day=15),
+            from_date=datetime(year=2014, month=7, day=14),
+            to_date=datetime(year=2014, month=7, day=18),
             timeframe=bt.TimeFrame.Minutes,
-            symbols=["F", "AAPL", "AMZN", "A", "AMD"],
+            symbols=["F", "AAPL", "AMZN"],
         ),
         broker_config=BrokerConfig(cash=100_000_000),
         task_id="myId",
