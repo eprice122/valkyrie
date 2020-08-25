@@ -71,15 +71,15 @@ stop_order_docs = Node(
 
 
 def stop_order(
-    self: Strategy, data, inp, side: str, size: int, price: float,
+    strategy: Strategy, data, inp, side: str, size: int, price: float,
 ):
     price = data.close[0] * price
     if side == "BUY" and inp[0] == 1:
-        self.buy(
+        strategy.buy(
             data=data, size=size, price=price, exectype=Order.Stop,
         )
     elif side == "SELL" and inp[0] == 1:
-        self.sell(
+        strategy.sell(
             data=data, size=size, price=price, exectype=Order.Stop,
         )
 
@@ -140,16 +140,16 @@ stop_limit_order_docs = Node(
 
 
 def stop_limit_order(
-    self: Strategy, data, inp, side: str, size: int, price: float, plimit: float,
+    strategy: Strategy, data, inp, side: str, size: int, price: float, plimit: float,
 ):
     price = data.close[0] * price
     plimit = data.close[0] * plimit
     if side == "BUY" and inp[0] == 1:
-        self.buy(
+        strategy.buy(
             data=data, size=size, price=price, plimit=plimit, exectype=Order.StopLimit,
         )
     elif side == "SELL" and inp[0] == 1:
-        self.sell(
+        strategy.sell(
             data=data, size=size, price=price, plimit=plimit, exectype=Order.StopLimit,
         )
 
@@ -176,11 +176,17 @@ stop_trail_docs = Node(
 
 
 def stop_trail(
-    self: Strategy, data, inp, side: str, size: int, price: float, trail_percent: float,
+    strategy: Strategy,
+    data,
+    inp,
+    side: str,
+    size: int,
+    price: float,
+    trail_percent: float,
 ):
     price = data.close[0] * price
     if side == "BUY" and inp[0] == 1:
-        self.buy(
+        strategy.buy(
             data=data,
             size=size,
             price=price,
@@ -188,7 +194,7 @@ def stop_trail(
             exectype=Order.StopTrail,
         )
     elif side == "SELL" and inp[0] == 1:
-        self.sell(
+        strategy.sell(
             data=data,
             size=size,
             price=price,
