@@ -3,6 +3,7 @@ import os
 import pickle
 import sys
 import time
+import traceback
 from threading import Event
 from typing import Dict
 
@@ -127,12 +128,24 @@ def api(
                 for i in reversed(range(0, len(cerebro.datas[0])))
             ],
             "analyzers": analyzers,
+            "elapsed_time": time.time() - start_time,
+            "status": "success",
         }
-
-        s3.put_object(
-            Body=pickle.dumps(data), Bucket="celery.db", Key=f"sessions/{task_id}"
-        )
-
     except InterruptedError:
         logger.info("Session Aborted")
+        data = {
+            "elapsed_time": time.time() - start_time,
+            "status": "aborted",
+        }
+    except Exception as e:
+        logger.error("Session Failed")
+        data = {
+            "elapsed_time": time.time() - start_time,
+            "status": "failure",
+            "traceback": traceback.format_exc(),
+            "exception": e,
+        }
+    s3.put_object(
+        Body=pickle.dumps(data), Bucket="celery.db", Key=f"sessions/{task_id}"
+    )
     logger.info(f"Completed in {time.time() - start_time} seconds")
