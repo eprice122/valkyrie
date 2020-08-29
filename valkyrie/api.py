@@ -14,6 +14,7 @@ from backtrader import TimeFrame, num2date
 from .analyzers import add_analyzers, get_analyzers
 from .analyzers.cash_market import CashMarket
 from .configs import BrokerConfig, MarketConfig, configure_broker, configure_market
+from .nodes.order.standard_order import market_bracket_order
 from .utils import build_indicator, build_order
 
 s3 = boto3.client("s3")

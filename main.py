@@ -46,31 +46,18 @@ d = [
         "outputs": ["null"],
     },
     {
-        "node_str": "limit_order",
+        "node_str": "market_bracket_order",
         "module_str": "standard_order",
         "id": "1ad2ee9c-a46c-4254-a0e9-37422664549f",
         "type": "ORDER_NODE",
-        "parameters": {"size": 10, "side": "SELL", "price": 1.005},
-        "inputs": {
-            "inp": {
-                "value": [
-                    {
-                        "port_id": "null",
-                        "node_id": "1ad7ee9c-a16c-4254-a0e9-37488664549f",
-                    }
-                ],
-                "key": "inp",
-                "multi": False,
-            },
+        "parameters": {
+            "size": 10,
+            "side": "BUY",
+            "upper_type": 0,
+            "upper_trigger": 1,
+            "lower_type": 1,
+            "lower_trigger": -1,
         },
-        "outputs": ["null"],
-    },
-    {
-        "node_str": "market_order",
-        "module_str": "standard_order",
-        "id": "1ad2ee9c-a46c-4254-a0e9-37422664549f",
-        "type": "ORDER_NODE",
-        "parameters": {"size": 10, "side": "BUY"},
         "inputs": {
             "inp": {
                 "value": [
@@ -93,9 +80,9 @@ if __name__ == "__main__":
         d,
         market_config=MarketConfig(
             from_date=datetime(year=2014, month=1, day=1),
-            to_date=datetime(year=2014, month=1, day=10),
+            to_date=datetime(year=2014, month=1, day=4),
             timeframe=bt.TimeFrame.Minutes,
-            symbols=["F", "AAPL", "AMZN"],
+            symbols=["F", "AAPL"],
         ),
         broker_config=BrokerConfig(cash=100_000_000),
         task_id="myId",
