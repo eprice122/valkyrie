@@ -34,13 +34,13 @@ rate_of_change_docs = Node(
     tooltip="Measures the ratio of change in prices over a period.",
     docs_path="rate_of_change.md",
     parameters=[Parameter(key="period", label="Period", ui=IntegerUI())],
-    inputs=[Input(key="parent", label="Input")],
+    inputs=[Input(key="inp", label="Input")],
     outputs=[Output()],
 )
 
 
 def rate_of_change(inp, period):
-    return btind.RateOfChange(inp, period=period)
+    return btind.RateOfChange(inp, period=period, safediv=True)
 
 
 rsi_docs = Node(
@@ -59,10 +59,31 @@ def rsi(inp, period):
     return btind.RSI(inp, period=period)
 
 
+derivative_docs = Node(
+    key="derivative",
+    label="Derivative",
+    type="INDICATOR_NODE",
+    tooltip="Takes the derivative of line in respect to the period length.",
+    docs_path="derivative.md",
+    parameters=[Parameter(key="period", label="Period", ui=IntegerUI(default=1))],
+    inputs=[Input(key="inp", label="Input",)],
+    outputs=[Output()],
+)
+
+
+def derivative(inp, period):
+    return inp(0) - inp(period)
+
+
 momentum_docs = Module(
     key="momentum",
     label="Momentum",
     color=Color(red=0, green=200, blue=255),
     icon="fas fa-hippo",
-    nodes=[commodity_channel_index_docs, rate_of_change_docs, rsi_docs],
+    nodes=[
+        commodity_channel_index_docs,
+        rate_of_change_docs,
+        rsi_docs,
+        derivative_docs,
+    ],
 )

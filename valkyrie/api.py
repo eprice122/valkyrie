@@ -117,7 +117,7 @@ def api(
 
         # Run and collect strategy
         logger.info("Running cerebro")
-        strategies = cerebro.run()
+        strategies = cerebro.run(tradehistory=True)
 
         analyzers = get_analyzers(strategy=strategies[0], market_config=market_config)
 
@@ -137,6 +137,7 @@ def api(
             "elapsed_time": time.time() - start_time,
             "status": "aborted",
         }
+        raise InterruptedError
     except Exception as e:
         logger.error("Session Failed")
         data = {
@@ -145,6 +146,9 @@ def api(
             "traceback": traceback.format_exc(),
             "exception": e,
         }
+        logger.error(e)
+        logger.error(traceback.format_exc())
+        raise e
     s3.put_object(
         Body=pickle.dumps(data), Bucket="celery.db", Key=f"sessions/{task_id}"
     )

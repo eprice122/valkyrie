@@ -278,6 +278,22 @@ def any_n(inp, period):
     return btind.AllN(inp, period=period)
 
 
+sum_n_docs = Node(
+    key="sum_n",
+    label="Sum of Previous",
+    type="INDICATOR_NODE",
+    tooltip="Calculates the Sum of the data values over a given period.",
+    docs_path="sum_n.md",
+    parameters=[Parameter(key="period", label="Period", ui=IntegerUI())],
+    inputs=[Input(key="inp", label="Input")],
+    outputs=[Output(label="Output")],
+)
+
+
+def sum_n(inp, period):
+    return btind.SumN(inp, period=period)
+
+
 bollinger_bands_docs = Node(
     key="bollinger_bands",
     label="Bollinger Bands",
@@ -314,6 +330,7 @@ fundamental_module = Module(
         logic_docs,
         all_n_docs,
         any_n_docs,
+        sum_n_docs,
         bollinger_bands_docs,
     ],
 )

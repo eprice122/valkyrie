@@ -50,7 +50,7 @@ d = [
         "module_str": "standard_order",
         "id": "1ad2ee9c-a46c-4254-a0e9-37422664549f",
         "type": "ORDER_NODE",
-        "parameters": {"size": 10, "side": "SELL", "price": 1.002},
+        "parameters": {"size": 10, "side": "SELL", "price": 1.005},
         "inputs": {
             "inp": {
                 "value": [
@@ -92,8 +92,8 @@ if __name__ == "__main__":
     api(
         d,
         market_config=MarketConfig(
-            from_date=datetime(year=2014, month=7, day=14),
-            to_date=datetime(year=2014, month=7, day=18),
+            from_date=datetime(year=2014, month=1, day=1),
+            to_date=datetime(year=2014, month=1, day=10),
             timeframe=bt.TimeFrame.Minutes,
             symbols=["F", "AAPL", "AMZN"],
         ),

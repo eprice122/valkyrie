@@ -190,7 +190,7 @@ def stop_trail(
             data=data,
             size=size,
             price=price,
-            trail_percent=trail_percent,
+            trailpercent=trail_percent,
             exectype=Order.StopTrail,
         )
     elif side == "SELL" and inp[0] == 1:
@@ -198,7 +198,7 @@ def stop_trail(
             data=data,
             size=size,
             price=price,
-            trail_percent=trail_percent,
+            trailpercent=trail_percent,
             exectype=Order.StopTrail,
         )
 

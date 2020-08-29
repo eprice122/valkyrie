@@ -9,6 +9,7 @@ import quantstats as qs
 
 from ..feeds.utils import get_benchmark
 from .cash_market import CashMarket
+from .trade_list import TradeList
 
 # Create logger
 logger = logging.getLogger(__name__)
@@ -23,6 +24,7 @@ def add_analyzers(cerebro):
     cerebro.addanalyzer(btanalyzers.TradeAnalyzer)
     cerebro.addanalyzer(btanalyzers.PositionsValue, headers=True)
     cerebro.addanalyzer(CashMarket)
+    cerebro.addanalyzer(TradeList)
 
 
 def get_analyzers(strategy, market_config):
@@ -41,6 +43,7 @@ def get_analyzers(strategy, market_config):
         "position_size": positions_size,
         "quantstats": get_quantstats(strategy, market_config),
         "broker": get_broker(strategy),
+        "trade_list": get_trade_list(strategy),
     }
 
 
@@ -106,6 +109,10 @@ def get_returns(strategy):
 
 def get_sharpe(strategy):
     return strategy.analyzers.sharperatio.get_analysis()["sharperatio"]
+
+
+def get_trade_list(strategy):
+    return strategy.analyzers.tradelist.get_analysis()
 
 
 def get_trade_analyzer(strategy):
