@@ -9,7 +9,6 @@ from .feeds.virtual import VirtualFeed
 
 # Create logger
 logger = logging.getLogger(__name__)
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 
 class BrokerConfig:
