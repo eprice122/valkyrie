@@ -13,7 +13,6 @@ from .trade_list import TradeList
 
 # Create logger
 logger = logging.getLogger(__name__)
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 
 def add_analyzers(cerebro):

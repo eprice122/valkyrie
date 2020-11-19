@@ -9,3 +9,5 @@ __pycache__
 dependencies
 resources
 .aws
+.direnv
+.envrc
