@@ -1,15 +1,7 @@
 import backtrader.indicators as btind
 
-from ..entities import (
-    Color,
-    Input,
-    IntegerUI,
-    Module,
-    Node,
-    Output,
-    Parameter,
-    SelectorUI,
-)
+from ..entities import (Color, Input, IntegerUI, Module, Node, Output,
+                        Parameter, SelectorUI)
 
 simple_moving_average_docs = Node(
     key="simple_moving_average",
@@ -66,13 +58,38 @@ true_range_docs = Node(
     tooltip="Gauges the volatility of the market during each tick.",
     docs_path="true_range.md",
     parameters=[],
-    inputs=[],
+    inputs=[
+        Input(key="high", label="High"),
+        Input(key="low", label="Low"),
+        Input(key="close", label="Close"),
+    ],
     outputs=[Output(label="Output")],
 )
 
 
-def true_range():
-    return btind.TrueRange()
+def true_range(high, low, close):
+    return btind.Max(abs(high - low), abs(high - close), abs(low - close))
+
+
+average_true_range_docs = Node(
+    key="average_true_range",
+    label="Average True Range",
+    type="INDICATOR_NODE",
+    tooltip="Average volatility of the market during each tick.",
+    docs_path="average_true_range.md",
+    parameters=[Parameter(key="period", label="Period", ui=IntegerUI())],
+    inputs=[
+        Input(key="high", label="High"),
+        Input(key="low", label="Low"),
+        Input(key="close", label="Close"),
+    ],
+    outputs=[Output(label="Output")],
+)
+
+
+def average_true_range(high, low, close, period):
+    tr = true_range(high, low, close)
+    return btind.MovingAverageSimple(tr, period=period)
 
 
 average_docs = Module(

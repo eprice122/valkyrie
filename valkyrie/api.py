@@ -14,6 +14,7 @@ from backtrader import TimeFrame, num2date
 from .analyzers import add_analyzers, get_analyzers
 from .analyzers.cash_market import CashMarket
 from .configs import BrokerConfig, MarketConfig, configure_broker, configure_market
+from .environ import environ
 from .nodes.order.standard_order import market_bracket_order
 from .utils import build_indicator, build_order
 
@@ -97,7 +98,9 @@ def api(
     broker_config: BrokerConfig,
     market_config: MarketConfig,
     interupt_handler: Event = Event(),
+    env: dict = dict(),
 ):
+    environ.update(env)
     start_time = time.time()
     try:
         if os.getenv("DEVELOPMENT_MODE"):
@@ -153,3 +156,4 @@ def api(
         Body=pickle.dumps(data), Bucket="celery.db", Key=f"sessions/{task_id}"
     )
     logger.info(f"Completed in {time.time() - start_time} seconds")
+

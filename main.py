@@ -1,3 +1,5 @@
+import logging
+import os
 from datetime import datetime
 
 import backtrader as bt
@@ -76,6 +78,7 @@ d = [
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.DEBUG)
     api(
         d,
         market_config=MarketConfig(
@@ -86,4 +89,10 @@ if __name__ == "__main__":
         ),
         broker_config=BrokerConfig(cash=100_000_000),
         task_id="myId",
+        env={
+            "MONGO_HOST": os.environ["MONGO_HOST"],
+            "MONGO_PORT": os.environ["MONGO_PORT"],
+            "MONGO_MARKET_USER": os.environ["MONGO_MARKET_USER"],
+            "MONGO_MARKET_PWD": os.environ["MONGO_MARKET_PWD"],
+        },
     )

@@ -6,6 +6,8 @@ import pandas as pd
 from backtrader import TimeFrame
 from pymongo import MongoClient
 
+from ..environ import environ
+
 
 def get_benchmark(from_date, to_date, timeframe, symbol="SPY"):
     documents = get_documents(timeframe, from_date, to_date, symbol)
@@ -58,10 +60,10 @@ def get_benchmark(from_date, to_date, timeframe, symbol="SPY"):
 
 def get_documents(timeframe, from_date, to_date, symbol):
     client = MongoClient(
-        host=os.environ["MONGO_HOST"],
-        port=int(os.environ["MONGO_PORT"]),
-        username=os.environ["MONGO_MARKET_USER"],
-        password=os.environ["MONGO_MARKET_PWD"],
+        host=environ["MONGO_HOST"],
+        port=int(environ["MONGO_PORT"]),
+        username=environ["MONGO_MARKET_USER"],
+        password=environ["MONGO_MARKET_PWD"],
         authSource="admin",
     )
     db = client["stockDB"]

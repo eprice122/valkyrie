@@ -4,7 +4,7 @@ A true range (TR) measures market volitility of each tick using the high, low, a
 
 * Large TR = higher volitility
 
-* Lowver TR = lower volitility
+* Lower TR = lower volitility
 
 ### Formula
 
