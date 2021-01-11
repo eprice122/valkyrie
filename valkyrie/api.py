@@ -5,7 +5,7 @@ import sys
 import time
 import traceback
 from threading import Event
-from typing import Dict
+from typing import Any, Dict
 
 import backtrader as bt
 import boto3
@@ -16,7 +16,7 @@ from .analyzers.cash_market import CashMarket
 from .configs import BrokerConfig, MarketConfig, configure_broker, configure_market
 from .environ import environ
 from .nodes.order.standard_order import market_bracket_order
-from .utils import build_indicator, build_order
+from .utils import build_indicator, build_order, get_market
 
 s3 = boto3.client("s3")
 
@@ -101,14 +101,16 @@ def api(
     env: dict = dict(),
 ):
     environ.update(env)
-    start_time = time.time()
+    execution_time = time.time()
+    data: Dict[str, Any] = dict(
+        {
+            "execution_time": execution_time,
+            "id": task_id,
+            "symbols": market_config.symbols,
+        }
+    )
     try:
-        if os.getenv("DEVELOPMENT_MODE"):
-            with open("valkyrie-art.txt", "r") as f:
-                logger.info(f.read())
-                logger.info("DEVELOPMENT MODE")
-
-        cerebro = bt.Cerebro()
+        cerebro: bt.Cerebro = bt.Cerebro()
 
         cerebro.addstrategy(
             Strategy, graph=graph, task_id=task_id, interupt_handler=interupt_handler
@@ -124,36 +126,35 @@ def api(
 
         analyzers = get_analyzers(strategy=strategies[0], market_config=market_config)
 
-        logger.info("Saving session to dynamoDB")
-        data = {
-            "dates": [
-                str(num2date(cerebro.datas[0].datetime[-i]))
-                for i in reversed(range(0, len(cerebro.datas[0])))
-            ],
-            "analyzers": analyzers,
-            "elapsed_time": time.time() - start_time,
-            "status": "success",
-        }
+        data["market"] = get_market(cerebro)
+
+        completion_time = time.time()
+        data["dates"] = [
+            str(num2date(cerebro.datas[0].datetime[-i]))
+            for i in reversed(range(0, len(cerebro.datas[0])))
+        ]
+
+        data["analyzers"] = analyzers
+
     except InterruptedError:
         logger.info("Session Aborted")
-        data = {
-            "elapsed_time": time.time() - start_time,
-            "status": "aborted",
-        }
         raise InterruptedError
     except Exception as e:
         logger.error("Session Failed")
-        data = {
-            "elapsed_time": time.time() - start_time,
-            "status": "failure",
-            "traceback": traceback.format_exc(),
-            "exception": e,
-        }
+        error = dict()
+        error["traceback"] = traceback.format_exc()
+        error["message"] = str(e)
+        data["error"] = error
         logger.error(e)
         logger.error(traceback.format_exc())
         raise e
+    """
     s3.put_object(
         Body=pickle.dumps(data), Bucket="celery.db", Key=f"sessions/{task_id}"
     )
-    logger.info(f"Completed in {time.time() - start_time} seconds")
+    """
+    completion_time = time.time()
+    data["completion_time"] = completion_time
 
+    logger.info(f"Completed in {completion_time - execution_time} seconds")
+    return data

@@ -1,5 +1,7 @@
 import importlib
-from typing import Callable
+from typing import Callable, Dict
+
+from backtrader import Cerebro
 
 
 def build_indicator(constructor: dict, nodes: dict):
@@ -55,3 +57,16 @@ def _parse(module_str, node_str):
     module = importlib.import_module(f".nodes.{module_str}", package="valkyrie")
     indicator = getattr(module, node_str)
     return indicator
+
+
+def get_market(cerebro: Cerebro) -> Dict[str, dict]:
+    market = dict()
+    for symbol, datas in cerebro.datasbyname.items():
+        market[symbol] = {
+            "open": list(datas.lines.open.array),
+            "high": list(datas.lines.high.array),
+            "low": list(datas.lines.low.array),
+            "close": list(datas.lines.close.array),
+            "volume": list(datas.lines.volume.array),
+        }
+    return market

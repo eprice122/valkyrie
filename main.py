@@ -79,7 +79,7 @@ d = [
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
-    api(
+    results = api(
         d,
         market_config=MarketConfig(
             from_date=datetime(year=2014, month=1, day=1),

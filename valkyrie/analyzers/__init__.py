@@ -39,7 +39,7 @@ def get_analyzers(strategy, market_config):
         "sharpe": get_sharpe(strategy),
         "transactions": transactions,
         "positions_value": positions_value,
-        "position_size": positions_size,
+        "positions_size": positions_size,
         "quantstats": get_quantstats(strategy, market_config),
         "broker": get_broker(strategy),
         "trade_list": get_trade_list(strategy),
@@ -120,26 +120,26 @@ def get_trade_analyzer(strategy):
     # This is a disaster for parsing so instead of the keyworks not existing they equal None
     return {
         "info": {
-            "total": trade_analyzer.get("total", {}).get("total"),
-            "open": trade_analyzer.get("total", {}).get("open"),
-            "closed": trade_analyzer.get("total", {}).get("close"),
+            "total": trade_analyzer.get("total", {}).get("total", 0),
+            "open": trade_analyzer.get("total", {}).get("open", 0),
+            "closed": trade_analyzer.get("total", {}).get("close", 0),
         },
         "streak": {
             "won": {
                 "current": trade_analyzer.get("streak", {})
                 .get("won", {})
-                .get("current"),
+                .get("current", 0),
                 "longest": trade_analyzer.get("streak", {})
                 .get("won", {})
-                .get("longest"),
+                .get("longest", 0),
             },
             "lost": {
                 "current": trade_analyzer.get("streak", {})
                 .get("lost", {})
-                .get("current"),
+                .get("current", 0),
                 "longest": trade_analyzer.get("streak", {})
                 .get("lost", {})
-                .get("longest"),
+                .get("longest", 0),
             },
         },
         "pnl": {
@@ -155,7 +155,7 @@ def get_trade_analyzer(strategy):
             },
         },
         "won": {
-            "total": trade_analyzer.get("won", {}).get("total"),
+            "total": trade_analyzer.get("won", {}).get("total", 0),
             "pnl": {
                 "total": trade_analyzer.get("won", {}).get("pnl", {}).get("total"),
                 "average": trade_analyzer.get("won", {}).get("pnl", {}).get("average"),
@@ -163,7 +163,7 @@ def get_trade_analyzer(strategy):
             },
         },
         "lost": {
-            "total": trade_analyzer.get("lost", {}).get("total"),
+            "total": trade_analyzer.get("lost", {}).get("total", 0),
             "pnl": {
                 "total": trade_analyzer.get("lost", {}).get("pnl", {}).get("total"),
                 "average": trade_analyzer.get("lost", {}).get("pnl", {}).get("average"),
@@ -171,18 +171,18 @@ def get_trade_analyzer(strategy):
             },
         },
         "long": {
-            "total": trade_analyzer.get("long", {}).get("total"),
-            "won": trade_analyzer.get("long", {}).get("won"),
-            "lost": trade_analyzer.get("long", {}).get("lost"),
+            "total": trade_analyzer.get("long", {}).get("total", 0),
+            "won": trade_analyzer.get("long", {}).get("won", 0),
+            "lost": trade_analyzer.get("long", {}).get("lost", 0),
             "pnl": {
                 "total": trade_analyzer.get("long", {}).get("pnl", {}).get("total"),
                 "average": trade_analyzer.get("long", {}).get("pnl", {}).get("average"),
             },
         },
         "short": {
-            "total": trade_analyzer.get("short", {}).get("total"),
-            "won": trade_analyzer.get("short", {}).get("won"),
-            "lost": trade_analyzer.get("short", {}).get("lost"),
+            "total": trade_analyzer.get("short", {}).get("total", 0),
+            "won": trade_analyzer.get("short", {}).get("won", 0),
+            "lost": trade_analyzer.get("short", {}).get("lost", 0),
             "pnl": {
                 "total": trade_analyzer.get("short", {}).get("pnl", {}).get("total"),
                 "average": trade_analyzer.get("short", {})
