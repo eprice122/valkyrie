@@ -49,13 +49,15 @@ class IntegerUI(UI):
 
 
 class FloatUI(UI):
-    def __init__(self, constraints: Constraints = None, default: Optional[int] = None):
+    def __init__(
+        self, constraints: Constraints = None, default: Optional[float] = None
+    ):
         super().__init__(type=UI_FLOAT, default=default)
         self.constraints = constraints
 
 
 class StringUI(UI):
-    def __init__(self, constraints: Constraints = None, default: Optional[int] = None):
+    def __init__(self, constraints: Constraints = None, default: Optional[str] = None):
         super().__init__(type=UI_STRING, default=default)
         self.constraints = constraints
 

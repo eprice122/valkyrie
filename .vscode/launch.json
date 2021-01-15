@@ -5,6 +5,16 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Python: Main (Integrated Terminal)",
+            "type": "python",
+            "request": "launch",
+            "program": "main.py",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "sudo": false,
+            "justMyCode": true
+        },
+        {
             "name": "Python: Module (Integrated Terminal)",
             "type": "python",
             "request": "launch",

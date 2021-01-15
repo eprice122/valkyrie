@@ -2,6 +2,7 @@ import importlib
 from typing import Callable, Dict
 
 from backtrader import Cerebro
+from backtrader.linebuffer import LineBuffer
 
 
 def build_indicator(constructor: dict, nodes: dict):
@@ -38,6 +39,12 @@ def build_order(strategy, constructor, nodes):
             kwargs[key] = getattr(nodes[value["node_id"]], value["port_id"])
         else:
             kwargs[key] = nodes[value["node_id"]]
+        """
+        This error type could be switched out later. But this ensures this kwarg[key] is a line,
+        not a group of lines (which could be caused by me accidently forgetting to add multiple
+        outputs or giving the output a key). This prevents bad docs.
+        """
+        assert isinstance(kwargs[key], LineBuffer)
 
     def func(data):
         return indicator(strategy=strategy, data=data, **kwargs)
