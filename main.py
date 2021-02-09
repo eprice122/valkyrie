@@ -18,7 +18,7 @@ d = [
         "outputs": ["open", "high", "low", "close", "volume"],
     },
     {
-        "node_str": "node_comparator",
+        "node_str": "crossover",
         "module_str": "fundamental",
         "id": "1ad7ee9c-a16c-4254-a0e9-37488664549f",
         "type": "INDICATOR_NODE",
@@ -48,9 +48,54 @@ d = [
         "outputs": ["null"],
     },
     {
+        "node_str": "math",
+        "module_str": "fundamental",
+        "id": "2",
+        "type": "INDICATOR_NODE",
+        "parameters": {"logic": 1},
+        "inputs": {
+            "input0": {
+                "value": [
+                    {
+                        "port_id": "close",
+                        "node_id": "642e8a47-e1c4-4273-b580-61522e27273c",
+                    },
+                ],
+                "key": "input0",
+                "multi": False,
+            },
+            "input1": {
+                "value": [
+                    {
+                        "port_id": "open",
+                        "node_id": "642e8a47-e1c4-4273-b580-61522e27273c",
+                    },
+                ],
+                "key": "input1",
+                "multi": False,
+            },
+        },
+        "outputs": ["null"],
+    },
+    {
+        "node_str": "accumulate",
+        "module_str": "fundamental",
+        "id": "0",
+        "type": "INDICATOR_NODE",
+        "parameters": {},
+        "inputs": {
+            "input0": {
+                "value": [{"port_id": "null", "node_id": "2",},],
+                "key": "input0",
+                "multi": False,
+            },
+        },
+        "outputs": ["null"],
+    },
+    {
         "node_str": "market_bracket_order",
         "module_str": "standard_order",
-        "id": "1ad2ee9c-a46c-4254-a0e9-37422664549f",
+        "id": "1",
         "type": "ORDER_NODE",
         "parameters": {
             "size": 10,
@@ -78,7 +123,7 @@ d = [
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.INFO)
     results = api(
         d,
         market_config=MarketConfig(

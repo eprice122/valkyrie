@@ -1,6 +1,7 @@
 import backtrader.indicators as btind
 
 from ...entities import Input, IntegerUI, Node, Output, Parameter
+from ._true_range import true_range
 
 average_true_range_docs = Node(
     key="average_true_range",

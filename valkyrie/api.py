@@ -8,7 +8,6 @@ from threading import Event
 from typing import Any, Dict
 
 import backtrader as bt
-import boto3
 from backtrader import TimeFrame, num2date
 
 from .analyzers import add_analyzers, get_analyzers
@@ -17,8 +16,6 @@ from .configs import BrokerConfig, MarketConfig, configure_broker, configure_mar
 from .environ import environ
 from .nodes.order.standard_order import market_bracket_order
 from .utils import build_indicator, build_order, get_market
-
-s3 = boto3.client("s3")
 
 # Create logger
 logger = logging.getLogger(__name__)
@@ -30,15 +27,13 @@ class Strategy(bt.Strategy):
     ):
         self.interupt_handler: Event = interupt_handler
         self.task_id = task_id
-        self.graph: Dict = dict(
-            (constructor["id"], constructor) for constructor in graph
-        )
+        self.graph = graph
         self.ctx: Dict = dict((data.symbol, dict()) for data in self.datas)
         self.orders: Dict = dict((data.symbol, list()) for data in self.datas)
         self.percent_done: int = 0
         logger.info("Adding node constructors")
         for data in self.datas:
-            for constructor in graph:
+            for constructor in self.graph.values():
                 self._check_session_aborted()
                 if constructor["type"] == "MARKET_NODE":
                     indicator = data
@@ -67,25 +62,6 @@ class Strategy(bt.Strategy):
 
     def stop(self):
         logger.info("Runtime logic completion - 100%")
-        logger.info("Saving nodes to dynamodb")
-        for symbol, nodes in self.ctx.items():
-            for id, node in nodes.items():
-                self._check_session_aborted()
-                body = {}
-                constructor = self.graph[id]
-                for out in constructor["outputs"]:
-                    if out == "null":
-                        body["null"] = [node[-i] for i in reversed(range(0, len(node)))]
-                    else:
-                        body[out] = [
-                            getattr(node, out)[-i]
-                            for i in reversed(range(0, len(node)))
-                        ]
-                s3.put_object(
-                    Body=pickle.dumps(body),
-                    Bucket="celery.db",
-                    Key=f"nodes/{self.task_id}/{id}/{symbol}",
-                )
 
     def _check_session_aborted(self):
         if self.interupt_handler.is_set():
@@ -100,6 +76,8 @@ def api(
     interupt_handler: Event = Event(),
     env: dict = dict(),
 ):
+    graph = dict((constructor["id"], constructor) for constructor in graph)
+
     environ.update(env)
     execution_time = time.time()
     data: Dict[str, Any] = dict(
@@ -134,6 +112,26 @@ def api(
             for i in reversed(range(0, len(cerebro.datas[0])))
         ]
 
+        ctx = strategies[0].ctx
+        results = dict()
+        for symbol, nodes in ctx.items():
+            results[symbol] = dict()
+            for id, node in nodes.items():
+                if interupt_handler.is_set():
+                    raise InterruptedError
+                body = dict()
+                constructor = graph[id]
+                for out in constructor["outputs"]:
+                    if out == "null":
+                        body["null"] = [node[-i] for i in reversed(range(0, len(node)))]
+                    else:
+                        body[out] = [
+                            getattr(node, out)[-i]
+                            for i in reversed(range(0, len(node)))
+                        ]
+                results[symbol][id] = body
+
+        data["results"] = results
         data["analyzers"] = analyzers
 
     except InterruptedError:
@@ -148,11 +146,7 @@ def api(
         logger.error(e)
         logger.error(traceback.format_exc())
         raise e
-    """
-    s3.put_object(
-        Body=pickle.dumps(data), Bucket="celery.db", Key=f"sessions/{task_id}"
-    )
-    """
+
     completion_time = time.time()
     data["completion_time"] = completion_time
 

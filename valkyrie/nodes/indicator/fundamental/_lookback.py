@@ -15,4 +15,4 @@ lookback_docs = Node(
 
 
 def lookback(input0, period):
-    return input0(period)
+    return input0(-period)

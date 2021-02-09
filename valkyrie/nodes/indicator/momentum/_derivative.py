@@ -15,4 +15,4 @@ derivative_docs = Node(
 
 
 def derivative(input0, period):
-    return input0(0) - input0(period)
+    return input0(0) - input0(-period)
