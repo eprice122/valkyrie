@@ -1,6 +1,6 @@
-# Simple Moving Average
+# Simple Moving Average (SMA)
 
-A Simple Moving Average (SMA) calculates the average of all ticks between the current price and the lookback period. The longer the period is, the stronger the trend direction is. However, the longer the period, the more the indicator lags behind the current market price. [Learn More](https://www.investopedia.com/terms/s/sma.asp)
+A Simple Moving Average calculates the average of all ticks between the current price and the lookback period. The longer the period is, the stronger the trend direction is. However, the longer the period, the more the indicator lags behind the current market price. [Learn More](https://www.investopedia.com/terms/s/sma.asp)
 
 
 
@@ -8,12 +8,9 @@ A Simple Moving Average (SMA) calculates the average of all ticks between the cu
 
 $SMA= \frac{\alpha_0 + \alpha_1 + \alpha_2 + ... + \alpha_n}{n}$
 
-### Where
+- $\ n$ = Lookback Period
 
-
-$\ n$ = Lookback Period
-
-$\alpha_n$ = Price at the n^th^ tick from current
+- $\alpha_n$ = Price at the n^th^ tick from current
 
 
 ## Example

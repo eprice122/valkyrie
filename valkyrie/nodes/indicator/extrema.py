@@ -40,7 +40,7 @@ highest_value_docs = Node(
 
 
 def highest_value(inp, period):
-    return btind.Lowest(inp, period=period)
+    return btind.Highest(inp, period=period)
 
 
 lowest_index_docs = Node(
@@ -56,7 +56,7 @@ lowest_index_docs = Node(
 
 
 def lowest_index(inp, period):
-    return btind.Lowest(inp, period=period)
+    return btind.FindFirstIndexLowest(inp, period=period)
 
 
 highest_index_docs = Node(
@@ -72,7 +72,7 @@ highest_index_docs = Node(
 
 
 def highest_index(inp, period):
-    return btind.index(inp, period=period)
+    return btind.FindFirstIndexHighest(inp, period=period)
 
 
 extrema_docs = Module(

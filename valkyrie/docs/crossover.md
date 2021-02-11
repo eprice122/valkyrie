@@ -1,6 +1,8 @@
-# Node Comparator
+# Crossover (CROSS)
 
-Allows comparisons to be performed between ticks of two nodes. The output is a binary 1 (_true_) or 0 (_false_). Supported comparisons are:
+Allows comparisons to be performed between ticks of two nodes.
+
+### Supported Comparators:
 
 * Greater Than
 * Greater Than or Equal
@@ -9,13 +11,19 @@ Allows comparisons to be performed between ticks of two nodes. The output is a b
 * Equal
 * Not Equal
 
+### Outputs:
+> If - __True__ if crossover condition is valid. __False__ if crossover condition is invalid.
+>
+> Else - __False__ if crossover condition is valid. __True__ if crossover condition is invalid.
 
-### Formula
 
-$A = \alpha \ @ \ \beta$
+## Formula
+
+$CROSS = \alpha \ ? \ \beta$
 
 $\alpha$ = Input 1
 
 $\beta$ = Input 2
 
-$@$ = Comparator
+$?$ = Comparator
+

@@ -7,7 +7,7 @@ sma_env_docs = Node(
     label="Simple Moving Average Envelope",
     type="INDICATOR_NODE",
     tooltip="Non-weighted average of the last n periods. With top and bottom bands.",
-    docs_path="simple_moving_average.md",
+    docs_path="simple_moving_average_env.md",
     parameters=[
         Parameter(key="period", label="Period", ui=IntegerUI()),
         Parameter(key="percent", label="Band Percent", ui=FloatUI(default=2.5)),

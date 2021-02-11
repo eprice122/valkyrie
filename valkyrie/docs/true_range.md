@@ -1,17 +1,23 @@
-# True Range
+# True Range (TR)
 
-A true range (TR) measures market volitility of each tick using the high, low, and yesterday's close. This indicator is often used as a predecessor for a simple moving average.
+A true range measures market volitility of each tick using the high, low, and yesterday's close. This indicator is often used as a predecessor for a simple moving average.
 
 * Large TR = higher volitility
 
 * Lower TR = lower volitility
 
-### Formula
+## Formula
 
 $TR = Max[Abs(H - C_p), Abs(L - C_p), (H - L)]$
 
-$H$ = High
+- $H$ = High
 
-$L$ = Low
+- $L$ = Low
 
-$C_p$ = Previous Close
+- $C_p$ = Previous Close
+
+## Example
+
+![](https://doc-assets-k7d4.s3.amazonaws.com/true-range-indicator.png)
+
+Note this is normalized data between -1 and 1. Volume bars are displayed to compare volitility.

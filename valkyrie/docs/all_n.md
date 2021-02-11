@@ -1,10 +1,15 @@
-# All Previous
+# All Previous (ALLN)
 
-Has a value of True (stored as 1.0 in the lines) if any of the values in the period evaluates to non-zero.
+## Output
+> If - __True__ if _all_ the previous input ticks of the period are not 0. Else __False__.
+> 
+> If - __False__ if _all_ the previous input ticks of the period are not 0. Else __True__.
 
-__Example__
+## Example
 
-| Tick  | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 |
-|-------|---|---|---|---|---|---|---|---|---|---|----|----|----|
-| Price | 0 | 0 | 0 | 1 | 1 | 1 | 1 | 1 | 1 | 0 | 1  | 1  | 0  |
-| HV(5) | x | x | x | x | 0 | 0 | 0 | 1 | 1 | 0 | 0  | 0  | 0  |
+_All N with a period of 5._
+
+| Tick    | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 |
+|---------|---|---|---|---|---|---|---|---|---|---|----|----|----|
+| Price   | 0 | 0 | 0 | 1 | 1 | 1 | 1 | 1 | 1 | 0 | 1  | 1  | 0  |
+| AllN(5) | x | x | x | x | 0 | 0 | 0 | 1 | 1 | 0 | 0  | 0  | 0  |

@@ -22,7 +22,7 @@ or_logic_docs = Node(
     label="Or",
     type="INDICATOR_NODE",
     tooltip="",
-    docs_path="",
+    docs_path="or_logic.md",
     parameters=[],
     inputs=[Input(key="inputs", label="Inputs", multi=True)],
     outputs=[Output(label="If", key="If"), Output(label="Else", key="Else")],

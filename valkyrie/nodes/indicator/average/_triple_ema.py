@@ -7,7 +7,7 @@ triple_ema_docs = Node(
     label="Triple EMA",
     type="INDICATOR_NODE",
     tooltip="Moving average intended to reduce lag.",
-    docs_path="",
+    docs_path="triple_ema.md",
     parameters=[Parameter(key="period", label="Period", ui=IntegerUI())],
     inputs=[Input(key="input0", label="Input")],
     outputs=[Output(label="Output")],
