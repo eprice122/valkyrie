@@ -15,4 +15,4 @@ weighted_moving_average_docs = Node(
 
 
 def weighted_moving_average(inp, period):
-    return btind.WeightedAverage(inp, period=period)
+    return btind.WeightedMovingAverage(inp, period=period)
