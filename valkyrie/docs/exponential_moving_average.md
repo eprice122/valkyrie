@@ -1,4 +1,4 @@
-# Exponential Moving Average
+# Exponential Moving Average (EMA)
 
 An Exponential Moving Average (EMA), similar to the Simple Moving Average (SMA) calculates the average of all ticks between the current price and the lookback period. However unlike the SMA, the EMA places an __exponentially__ larger weight on the most recent ticks. [Learn More](https://www.investopedia.com/terms/e/ema.asp)
 
@@ -6,11 +6,11 @@ An Exponential Moving Average (EMA), similar to the Simple Moving Average (SMA) 
 
 $EMA= \beta * (Current - EMA_{prev}) + EMA_{prev}$
 
-- $EMA_{prev}$ = Previous tick EMA
+* $EMA_{prev}$ = Previous tick EMA
 
-- $Current$ = Current Price
+* $Current$ = Current Price
 
-- $\beta$ = Smoothing constant
+* $\beta$ = Smoothing constant
 
 ## Example
 

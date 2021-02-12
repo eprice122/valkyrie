@@ -18,6 +18,6 @@ $TR = Max[Abs(H - C_p), Abs(L - C_p), (H - L)]$
 
 ## Example
 
-![](https://doc-assets-k7d4.s3.amazonaws.com/true-range-indicator.png)
+![](https://doc-assets-k7d4.s3.amazonaws.com/tr-indicator.png)
 
 Note this is normalized data between -1 and 1. Volume bars are displayed to compare volitility.

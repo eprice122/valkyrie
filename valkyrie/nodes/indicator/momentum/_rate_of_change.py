@@ -15,5 +15,5 @@ rate_of_change_docs = Node(
 
 
 def rate_of_change(input0, period):
-    return btind.RateOfChange(input0, period=period, safediv=True)
+    return btind.RateOfChange(input0, period=period)
 

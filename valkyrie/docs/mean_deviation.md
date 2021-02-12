@@ -1,20 +1,22 @@
-# Mean Deviation
+# Mean Deviation (MD)
 
-The mean deviation (MD) measures the average absolute difference each value is from the period's mean.
+The mean deviation measures the average absolute difference each value is from the period's mean.
 
 * Large MD = higher volitility
 
 * Lower MD = lower volitility
 
 
-### Formula
+## Formula
 
 $MD = \frac{\sum_{i=1}^{N} abs(x_i - \mu)}{N}$
 
-__Where:__
+* $N$ = Lookback Period
 
-$N$ = Lookback Period
+* $x_i$ = Value at tick $i$
 
-$x_i$ = Value at tick $i$
+* $\mu$ = mean of period
 
-$\mu$ = mean of period
+## Example
+
+![](https://doc-assets-k7d4.s3.amazonaws.com/md-indicator.png)

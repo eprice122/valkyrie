@@ -13,6 +13,6 @@ Support for AND boolean (true/false) logic. [Learn More](https://en.wikipedia.or
 
 $AND = \alpha \ \& \ \beta$
 
-$\alpha$ = Input 1
+* $\alpha$ = Input 1
 
-$\beta$ = Input 2
+* $\beta$ = Input 2

@@ -32,7 +32,7 @@ highest_value_docs = Node(
     label="Highest Value",
     type="INDICATOR_NODE",
     tooltip="The highest value for the data in a given period.",
-    docs_path="highest_index.md",
+    docs_path="highest_value.md",
     parameters=[Parameter(key="period", label="Period", ui=IntegerUI())],
     inputs=[Input(key="inp")],
     outputs=[Output()],

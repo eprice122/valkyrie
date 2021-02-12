@@ -13,8 +13,8 @@ Support for basic math to be performed between ticks of two nodes. [Learn More](
 
 $MATH = \alpha \ ? \ \beta$
 
-$\alpha$ = Input 1
+* $\alpha$ = Input 1
 
-$\beta$ = Input 2
+* $\beta$ = Input 2
 
-$?$ = Operation performed
+* $?$ = Operation performed

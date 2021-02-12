@@ -21,9 +21,12 @@ Allows comparisons to be performed between ticks of two nodes.
 
 $CROSS = \alpha \ ? \ \beta$
 
-$\alpha$ = Input 1
+* $\alpha$ = Input 1
 
-$\beta$ = Input 2
+* $\beta$ = Input 2
 
-$?$ = Comparator
+* $?$ = Comparator
 
+![](https://doc-assets-k7d4.s3.amazonaws.com/cross-indicator.png)
+
+_Note two charts were used to better outline the output of the crossover_

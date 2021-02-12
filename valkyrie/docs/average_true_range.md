@@ -10,11 +10,11 @@ An average true range measures the average market volitility of each tick using 
 
 $ATR = (\frac{1}{n}$) $\sum_{i=1}^{n} TR_i$	
 
-$TR = Max[Abs(H - C_p), Abs(L - C_p), (H - L)]$
+* $TR = Max[Abs(H - C_p), Abs(L - C_p), (H - L)]$
 
-$H$ = High
+* $H$ = High
 
-$L$ = Low
+* $L$ = Low
 
-$C_p$ = Previous Close
+* $C_p$ = Previous Close
 

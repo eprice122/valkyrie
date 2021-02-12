@@ -11,3 +11,5 @@ _Lookback with period of 5_
 |-------|---|---|---|---|---|---|---|---|---|
 | Price | 2 | 3 | 4 | 3 | 6 | 4 | 3 | 2 | 5 |
 | LB(5) | x | x | x | x | 2 | 3 | 4 | 3 | 6 |
+
+![](https://doc-assets-k7d4.s3.amazonaws.com/lb-indicator.png)
