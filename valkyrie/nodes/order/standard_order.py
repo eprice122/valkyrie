@@ -75,9 +75,7 @@ stop_order_docs = Node(
 def stop_order(
     strategy: Strategy, data, inp, side: str, size: int, trigger_percent: float,
 ):
-    trigger_percent += 100  # + 100%
-    trigger_percent /= 100  # turned into a float
-    price = data.close[0] * trigger_percent
+    price = _set_trigger_price(trigger_percent, data.close[0])
     if side == "BUY" and inp[0] == 1:
         strategy.buy(
             data=data, size=size, price=price, exectype=Order.Stop,
@@ -111,9 +109,7 @@ limit_order_docs = Node(
 def limit_order(
     strategy: Strategy, data, inp, side: str, size: int, trigger_percent: float,
 ):
-    trigger_percent += 100  # + 100%
-    trigger_percent /= 100  # turned into a float
-    price = data.close[0] * trigger_percent
+    price = _set_trigger_price(trigger_percent, data.close[0])
     if side == "BUY" and inp[0] == 1:
         strategy.buy(
             data=data, size=size, price=price, exectype=Order.Limit,
@@ -154,13 +150,8 @@ def stop_limit_order(
     trigger_percent: float,
     limit_percent: float,
 ):
-    trigger_percent += 100  # + 100%
-    trigger_percent /= 100  # turned into a float
-    price = data.close[0] * trigger_percent
-
-    limit_percent += 100  # + 100%
-    limit_percent /= 100  # turned into a float
-    plimit = data.close[0] * limit_percent
+    price = _set_trigger_price(trigger_percent, data.close[0])
+    plimit = _set_trigger_price(limit_percent, data.close[0])
     if side == "BUY" and inp[0] == 1:
         strategy.buy(
             data=data, size=size, price=price, plimit=plimit, exectype=Order.StopLimit,
@@ -194,8 +185,7 @@ stop_trail_docs = Node(
 def stop_trail(
     strategy: Strategy, data, inp, side: str, size: int, trail_percent: float,
 ):
-    trail_percent /= 100  # turned into a float
-
+    trail_percent = _set_stop_trail_trigger(trail_percent)
     if side == "BUY" and inp[0] == 1:
         strategy.buy(
             data=data, size=size, trailpercent=trail_percent, exectype=Order.StopTrail,
@@ -377,38 +367,50 @@ def _set_kwargs(
         kwargs["exectype"] = Order.Market
     if middle_type == LIMIT_ORDER:
         kwargs["exectype"] = Order.Limit
-        middle_trigger = middle_trigger / 100 + 1
-        middle_trigger *= data.close[0]
-        kwargs["oargs"] = {"limitprice": middle_trigger}
+        kwargs["oargs"] = {
+            "limitprice": _set_trigger_price(middle_trigger, data.close[0])
+        }
 
-    upper_trigger = upper_trigger / 100 + 1
-    upper_trigger *= data.close[0]
     if upper_type == LIMIT_ORDER:
         kwargs["limitexec"] = Order.Limit
-        kwargs["limitargs"] = {"limitprice": upper_trigger}
+        kwargs["limitargs"] = {
+            "limitprice": _set_trigger_price(upper_trigger, data.close[0])
+        }
     elif upper_type == STOP_ORDER:
         kwargs["limitexec"] = Order.Stop
-        kwargs["limitargs"] = {"stopprice": upper_trigger}
+        kwargs["limitargs"] = {
+            "stopprice": _set_trigger_price(upper_trigger, data.close[0])
+        }
     elif upper_type == STOPTRAIL_ORDER:
-        lower_trigger /= 100
         kwargs["stopexec"] = Order.StopTrail
-        kwargs["stopargs"] = {"trailpercent": lower_trigger}
+        kwargs["stopargs"] = {"trailpercent": _set_stop_trail_trigger(upper_trigger)}
     else:
         raise ValueError
 
-    lower_trigger = lower_trigger / 100 + 1
-    lower_trigger *= data.close[0]
     if lower_type == STOP_ORDER:
         kwargs["stopexec"] = Order.Stop
-        kwargs["stopargs"] = {"stopprice": lower_trigger}
+        kwargs["stopargs"] = {
+            "stopprice": _set_trigger_price(lower_trigger, data.close[0])
+        }
     elif lower_type == LIMIT_ORDER:
         kwargs["stopexec"] = Order.Limit
-        kwargs["stopargs"] = {"limitprice": lower_trigger}
+        kwargs["stopargs"] = {
+            "limitprice": _set_trigger_price(lower_trigger, data.close[0])
+        }
     elif lower_type == STOPTRAIL_ORDER:
-        lower_trigger /= 100
         kwargs["stopexec"] = Order.StopTrail
-        kwargs["stopargs"] = {"trailpercent": lower_trigger}
+        kwargs["stopargs"] = {"trailpercent": _set_stop_trail_trigger(lower_trigger)}
     else:
         raise ValueError
 
     return kwargs
+
+
+def _set_trigger_price(trigger_percent: float, close: float):
+    trigger_percent += 100  # + 100%
+    trigger_percent /= 100  # turned into a float
+    return close * trigger_percent
+
+
+def _set_stop_trail_trigger(trail_percent: float):
+    return trail_percent / 100

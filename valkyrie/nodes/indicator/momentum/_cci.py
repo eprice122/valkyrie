@@ -6,7 +6,7 @@ cci_docs = Node(
     key="cci",
     label="CCI",
     type="INDICATOR_NODE",
-    tooltip="Commodity Channel Index - Measures variations of the “typical price” from its mean to identify extremes and reversals.",
+    tooltip="Measures variations of the “typical price” from its mean to identify extremes and reversals.",
     docs_path="commodity_channel_index.md",
     parameters=[
         Parameter(key="period", label="Period", ui=IntegerUI()),

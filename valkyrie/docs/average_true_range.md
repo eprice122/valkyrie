@@ -1,6 +1,6 @@
 # Average True Range (ATR)
 
-An average true range measures the average market volitility of each tick using the high, low, and yesterday's close.
+An average true range measures the average market volitility of each tick using the high, low, and yesterday's close. [Learn More](https://www.investopedia.com/terms/a/atr.asp)
 
 * Large TR = higher volitility
 

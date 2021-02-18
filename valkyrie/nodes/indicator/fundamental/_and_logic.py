@@ -21,7 +21,7 @@ and_logic_docs = Node(
     key="and_logic",
     label="And",
     type="INDICATOR_NODE",
-    tooltip="",
+    tooltip="Outputs true if all inputs evaluate to non-zero. Otherwise outputs false.",
     docs_path="and_logic.md",
     parameters=[],
     inputs=[Input(key="inputs", label="Inputs", multi=True)],

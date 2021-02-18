@@ -37,7 +37,7 @@ crossover_docs = Node(
     key="crossover",
     label="Crossover",
     type="INDICATOR_NODE",
-    tooltip="Compares two nodes with the specified crossover.",
+    tooltip="Compares two nodes with the specified crossover operation.",
     docs_path="crossover.md",
     parameters=[
         Parameter(

@@ -6,7 +6,7 @@ rsi_docs = Node(
     key="rsi",
     label="RSI",
     type="INDICATOR_NODE",
-    tooltip="Relative Strength Index - Measures momentum by calculating the ration of higher closes and lower closes after having been smoothed by an average, normalizing the result between 0 and 100.",
+    tooltip="Measures momentum by calculating the ratio of higher closes and lower closes (smoothed by an average), normalizing the result between 0 and 100.",
     docs_path="rsi.md",
     parameters=[Parameter(key="period", label="Period", ui=IntegerUI())],
     inputs=[Input(key="input0", label="Input",)],

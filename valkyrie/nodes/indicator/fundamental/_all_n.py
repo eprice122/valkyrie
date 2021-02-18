@@ -16,7 +16,7 @@ all_n_docs = Node(
     key="all_n",
     label="All of Period",
     type="INDICATOR_NODE",
-    tooltip="Has a value of True (stored as 1.0 in the lines) if all of the values in the period evaluates to non-zero.",
+    tooltip="Outputs true if all of the values in the period evaluates to non-zero.",
     docs_path="all_n.md",
     parameters=[Parameter(key="period", label="Period", ui=IntegerUI())],
     inputs=[Input(key="input0", label="Input")],

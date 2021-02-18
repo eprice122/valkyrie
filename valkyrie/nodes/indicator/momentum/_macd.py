@@ -6,7 +6,7 @@ macd_docs = Node(
     key="macd",
     label="MACD",
     type="INDICATOR_NODE",
-    tooltip="Moving Average Convergence Divergence - It measures the distance of a short and a long term moving average to try to identify the trend.",
+    tooltip="Measures the distance of a short and a long term moving average to identify an emerging trend.",
     docs_path="macd.md",
     parameters=[
         Parameter(key="short_period", label="Short Period", ui=IntegerUI(default=12)),

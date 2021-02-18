@@ -22,7 +22,7 @@ accumulate_docs = Node(
     label="Accumulate",
     type="INDICATOR_NODE",
     tooltip="Total sum of all previous values.",
-    docs_path="",
+    docs_path="accumulate.md",
     parameters=[],
     inputs=[Input(key="input0")],
     outputs=[Output()],

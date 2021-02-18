@@ -21,7 +21,7 @@ or_logic_docs = Node(
     key="or_logic",
     label="Or",
     type="INDICATOR_NODE",
-    tooltip="",
+    tooltip="Outputs true if any input evaluates to non-zero. Otherwise outputs false.",
     docs_path="or_logic.md",
     parameters=[],
     inputs=[Input(key="inputs", label="Inputs", multi=True)],

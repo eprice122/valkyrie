@@ -6,8 +6,8 @@ bollinger_bands_docs = Node(
     key="bollinger_bands",
     label="Bollinger Bands",
     type="INDICATOR_NODE",
-    tooltip="",
-    docs_path="",
+    tooltip="Measures volatility by predicting an overbought (top band) and oversold (bottom band) market",
+    docs_path="bollinger_bands.md",
     parameters=[
         Parameter(key="period", label="Period", ui=IntegerUI(default=30)),
         Parameter(key="devfactor", label="Dev Factor", ui=IntegerUI(default=2)),
