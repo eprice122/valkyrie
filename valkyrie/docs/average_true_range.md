@@ -6,7 +6,7 @@ An average true range measures the average market volitility of each tick using 
 
 * Lower TR = lower volitility
 
-### Formula
+## Formula
 
 $ATR = (\frac{1}{n}$) $\sum_{i=1}^{n} TR_i$	
 

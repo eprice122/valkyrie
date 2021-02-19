@@ -27,6 +27,8 @@ $CROSS = \alpha \ ? \ \beta$
 
 * $?$ = Comparator
 
+## Example 
+
 ![](https://doc-assets-k7d4.s3.amazonaws.com/cross-indicator.png)
 
 _Note two charts were used to better outline the output of the crossover_

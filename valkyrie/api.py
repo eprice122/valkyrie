@@ -133,6 +133,7 @@ def api(
 
         data["results"] = results
         data["analyzers"] = analyzers
+        data["node_ids"] = [node["id"] for node in graph.values()]
 
     except InterruptedError:
         logger.info("Session Aborted")
