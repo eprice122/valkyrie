@@ -42,7 +42,12 @@ class Strategy(bt.Strategy):
                         build_order(self, constructor, self.ctx[data.symbol])
                     )
                 elif constructor["type"] == "INDICATOR_NODE":
-                    indicator = build_indicator(constructor, self.ctx[data.symbol])
+                    indicator = build_indicator(
+                        strategy=self,
+                        data=data,
+                        constructor=constructor,
+                        nodes=self.ctx[data.symbol],
+                    )
                 else:
                     raise ValueError
                 self.ctx[data.symbol][constructor["id"]] = indicator

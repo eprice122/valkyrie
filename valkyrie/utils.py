@@ -5,7 +5,7 @@ from backtrader import Cerebro
 from backtrader.linebuffer import LineBuffer
 
 
-def build_indicator(constructor: dict, nodes: dict):
+def build_indicator(strategy, data, constructor: dict, nodes: dict):
     kwargs = constructor["parameters"]
     for key, props in constructor["inputs"].items():
         if not props["multi"]:
@@ -21,6 +21,9 @@ def build_indicator(constructor: dict, nodes: dict):
                     kwargs[key].add(getattr(nodes[value["node_id"]], value["port_id"]))
                 else:
                     kwargs[key].add(nodes[value["node_id"]])
+
+    if len(constructor["inputs"].items()) == 0:
+        kwargs["data"] = data
 
     indicator = parse_indicator(
         module_str=constructor["module_str"], node_str=constructor["node_str"]

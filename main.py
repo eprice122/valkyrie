@@ -93,6 +93,15 @@ d = [
         "outputs": ["null"],
     },
     {
+        "node_str": "cci",
+        "module_str": "momentum",
+        "id": "5",
+        "type": "INDICATOR_NODE",
+        "parameters": {"period": 15},
+        "inputs": {},
+        "outputs": ["null"],
+    },
+    {
         "node_str": "market_bracket_order",
         "module_str": "standard_order",
         "id": "1",
