@@ -50,6 +50,7 @@ crossover_docs = Node(
                     "Less Than": LESS_THAN,
                     "Less Equal": LESS_EQUAL,
                     "Equal": EQUAL,
+                    "Not Equal": NOT_EQUAL,
                 }
             ),
         )

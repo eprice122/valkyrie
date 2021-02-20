@@ -22,6 +22,8 @@ An order which follows the trend (direction depends on parameters), and triggers
 > 
 > * Must be greater than zero
 
+## Example
+
 ### Buy Stop Trail Order
 
 | Parameter     | Value |

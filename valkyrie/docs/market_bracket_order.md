@@ -16,6 +16,7 @@ An order type which, on trigger, executes a market order along with a lower and 
 >
 > * Must be greater than zero
 
+## Example
 
 ### Upper Order Type \<Selection>
 > Order type for upper band.

@@ -26,6 +26,8 @@ An order which triggers a _limit_ order when the price crosses specified value. 
 > * Must be _less_ than zero when _buy_ side
 > * Must be _greater_ than zero when _sell_ side
 
+## Example
+
 ### Buy Stop Limit Order
 
 | Parameter     | Value |
