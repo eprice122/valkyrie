@@ -9,10 +9,10 @@ sum_n_docs = Node(
     tooltip="Calculates the sum of the data values over a given period.",
     docs_path="sum_n.md",
     parameters=[Parameter(key="period", label="Period", ui=IntegerUI())],
-    inputs=[Input(key="inp", label="Input")],
+    inputs=[Input(key="input0", label="Input")],
     outputs=[Output()],
 )
 
 
-def sum_n(inp, period):
-    return btind.SumN(inp, period=period)
+def sum_n(input0, period):
+    return btind.SumN(input0, period=period)

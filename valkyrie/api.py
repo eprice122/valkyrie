@@ -23,10 +23,9 @@ logger = logging.getLogger(__name__)
 
 class Strategy(bt.Strategy):
     def __init__(
-        self, graph, task_id, interupt_handler: Event = Event(),
+        self, graph, interupt_handler: Event = Event(),
     ):
         self.interupt_handler: Event = interupt_handler
-        self.task_id = task_id
         self.graph = graph
         self.ctx: Dict = dict((data.symbol, dict()) for data in self.datas)
         self.orders: Dict = dict((data.symbol, list()) for data in self.datas)
@@ -75,7 +74,7 @@ class Strategy(bt.Strategy):
 
 def api(
     graph,
-    task_id,
+    task_id: str,
     broker_config: BrokerConfig,
     market_config: MarketConfig,
     interupt_handler: Event = Event(),
@@ -95,9 +94,7 @@ def api(
     try:
         cerebro: bt.Cerebro = bt.Cerebro()
 
-        cerebro.addstrategy(
-            Strategy, graph=graph, task_id=task_id, interupt_handler=interupt_handler
-        )
+        cerebro.addstrategy(Strategy, graph=graph, interupt_handler=interupt_handler)
 
         configure_market(cerebro, market_config, interupt_handler)
         configure_broker(cerebro, broker_config)
@@ -118,7 +115,7 @@ def api(
         ]
 
         ctx = strategies[0].ctx
-        results = dict()
+        results: Dict[str, Dict[str, Dict[str, list]]] = dict()
         for symbol, nodes in ctx.items():
             results[symbol] = dict()
             for id, node in nodes.items():

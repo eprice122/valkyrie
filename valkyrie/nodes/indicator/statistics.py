@@ -9,13 +9,13 @@ standard_deviation_docs = Node(
     tooltip="Measures the spread of the stock prices.",
     docs_path="standard_deviation.md",
     parameters=[Parameter(key="period", label="Period", ui=IntegerUI(),)],
-    inputs=[Input(key="inp", label="Input",)],
+    inputs=[Input(key="input0", label="Input",)],
     outputs=[Output(label="Output")],
 )
 
 
-def standard_deviation(inp, period):
-    return btind.StandardDeviation(inp, period=period)
+def standard_deviation(input0, period):
+    return btind.StandardDeviation(input0, period=period)
 
 
 mean_deviation_docs = Node(
@@ -25,13 +25,13 @@ mean_deviation_docs = Node(
     tooltip="The average absolute difference each value is from the period's mean.",
     docs_path="mean_deviation.md",
     parameters=[Parameter(key="period", label="Period", ui=IntegerUI(),)],
-    inputs=[Input(key="inp", label="Input",)],
+    inputs=[Input(key="input0", label="Input",)],
     outputs=[Output(label="Output")],
 )
 
 
-def mean_deviation(inp, period):
-    return btind.MeanDeviation(inp, period=period)
+def mean_deviation(input0, period):
+    return btind.MeanDeviation(input0, period=period)
 
 
 statistics_module = Module(

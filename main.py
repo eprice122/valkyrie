@@ -37,7 +37,7 @@ d = [
             "input1": {
                 "value": [
                     {
-                        "port_id": "open",
+                        "port_id": "high",
                         "node_id": "642e8a47-e1c4-4273-b580-61522e27273c",
                     },
                 ],
@@ -78,6 +78,41 @@ d = [
         "outputs": ["null"],
     },
     {
+        "node_str": "lookback",
+        "module_str": "fundamental",
+        "id": "6",
+        "type": "INDICATOR_NODE",
+        "parameters": {"period": 20},
+        "inputs": {
+            "input0": {
+                "value": [
+                    {
+                        "port_id": "If",
+                        "node_id": "1ad7ee9c-a16c-4254-a0e9-37488664549f",
+                    },
+                ],
+                "key": "input0",
+                "multi": False,
+            },
+        },
+        "outputs": ["null"],
+    },
+    {
+        "node_str": "default_value",
+        "module_str": "fundamental",
+        "id": "36",
+        "type": "INDICATOR_NODE",
+        "parameters": {"value": 15},
+        "inputs": {
+            "input0": {
+                "value": [{"port_id": "null", "node_id": "6",},],
+                "key": "input0",
+                "multi": False,
+            },
+        },
+        "outputs": ["null"],
+    },
+    {
         "node_str": "accumulate",
         "module_str": "fundamental",
         "id": "0",
@@ -102,32 +137,67 @@ d = [
         "outputs": ["null"],
     },
     {
-        "node_str": "market_bracket_order",
+        "node_str": "market_order",
         "module_str": "standard_order",
         "id": "1",
         "type": "ORDER_NODE",
-        "parameters": {
-            "size": 10,
-            "side": "BUY",
-            "upper_type": 0,
-            "upper_trigger": 1,
-            "lower_type": 1,
-            "lower_trigger": -1,
-        },
+        "parameters": {"size": 10, "side": "BUY",},
         "inputs": {
-            "inp": {
+            "input0": {
                 "value": [
                     {
                         "port_id": "If",
                         "node_id": "1ad7ee9c-a16c-4254-a0e9-37488664549f",
                     }
                 ],
-                "key": "inp",
+                "key": "input0",
                 "multi": False,
             },
         },
         "outputs": ["null"],
     },
+    {
+        "node_str": "market_order",
+        "module_str": "standard_order",
+        "id": "76",
+        "type": "ORDER_NODE",
+        "parameters": {"size": 10, "side": "SELL",},
+        "inputs": {
+            "input0": {
+                "value": [{"port_id": "null", "node_id": "6",}],
+                "key": "input0",
+                "multi": False,
+            },
+        },
+        "outputs": ["null"],
+    },
+    # {
+    #     "node_str": "market_bracket_order",
+    #     "module_str": "standard_order",
+    #     "id": "1",
+    #     "type": "ORDER_NODE",
+    #     "parameters": {
+    #         "size": 10,
+    #         "side": "BUY",
+    #         "upper_type": 0,
+    #         "upper_trigger": 1,
+    #         "lower_type": 1,
+    #         "lower_trigger": -1,
+    #     },
+    #     "inputs": {
+    #         "input0": {
+    #             "value": [
+    #                 {
+    #                     "port_id": "If",
+    #                     "node_id": "1ad7ee9c-a16c-4254-a0e9-37488664549f",
+    #                 }
+    #             ],
+    #             "key": "inp",
+    #             "multi": False,
+    #         },
+    #     },
+    #     "outputs": ["null"],
+    # },
 ]
 
 
@@ -150,3 +220,6 @@ if __name__ == "__main__":
             "MONGO_MARKET_PWD": os.environ["MONGO_MARKET_PWD"],
         },
     )
+    y = results["results"]["F"]["6"]
+
+    x = 0

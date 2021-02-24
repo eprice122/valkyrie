@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Main (Integrated Terminal)",
+            "name": "Python: Main",
             "type": "python",
             "request": "launch",
             "program": "main.py",
@@ -15,7 +15,17 @@
             "justMyCode": true
         },
         {
-            "name": "Python: Module (Integrated Terminal)",
+            "name": "Python: Unittest",
+            "type": "python",
+            "request": "launch",
+            "program": "test_runner.py",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "sudo": false,
+            "justMyCode": true
+        },
+        {
+            "name": "Python: Module",
             "type": "python",
             "request": "launch",
             "program": "${file}",

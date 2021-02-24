@@ -9,10 +9,10 @@ rank_docs = Node(
     tooltip="Measures the percent rank of the current value with respect to that of period bars ago.",
     docs_path="rank.md",
     parameters=[Parameter(key="period", label="Period", ui=IntegerUI())],
-    inputs=[Input(key="inp", label="Input")],
+    inputs=[Input(key="input0", label="Input")],
     outputs=[Output()],
 )
 
 
-def rank(inp, period):
+def rank(input0, period):
     return btind.PercentRank()

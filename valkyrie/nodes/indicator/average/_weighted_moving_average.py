@@ -9,10 +9,10 @@ weighted_moving_average_docs = Node(
     tooltip="A Moving Average which gives an arithmetic weighting to values with the newest having the more weight.",
     docs_path="weighted_moving_average.md",
     parameters=[Parameter(key="period", label="Period", ui=IntegerUI())],
-    inputs=[Input(key="inp")],
+    inputs=[Input(key="input0")],
     outputs=[Output()],
 )
 
 
-def weighted_moving_average(inp, period):
-    return btind.WeightedMovingAverage(inp, period=period)
+def weighted_moving_average(input0, period):
+    return btind.WeightedMovingAverage(input0, period=period)

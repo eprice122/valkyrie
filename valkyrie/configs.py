@@ -1,7 +1,7 @@
 import logging
 import sys
 from datetime import datetime
-from typing import Set
+from typing import Iterable
 
 from backtrader import TimeFrame
 
@@ -22,7 +22,7 @@ class MarketConfig:
         from_date: datetime,
         to_date: datetime,
         timeframe: TimeFrame,
-        symbols: Set[str],
+        symbols: Iterable[str],
     ):
         self.from_date = from_date
         self.to_date = to_date

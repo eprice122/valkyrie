@@ -30,16 +30,14 @@ def get_analyzers(strategy, market_config):
     logger.info("Collecting analyzers")
 
     transactions = get_transactions(strategy)
-    positions_value = get_positions_value(strategy)
-    positions_size = get_positions_size(positions_value, transactions)
+    positions = get_positions(strategy, transactions)
 
     return {
         "returns": get_returns(strategy),
         "trade_analyzer": get_trade_analyzer(strategy),
         "sharpe": get_sharpe(strategy),
         "transactions": transactions,
-        "positions_value": positions_value,
-        "positions_size": positions_size,
+        "positions": positions,
         "quantstats": get_quantstats(strategy, market_config),
         "broker": get_broker(strategy),
         "trade_list": get_trade_list(strategy),
@@ -48,42 +46,49 @@ def get_analyzers(strategy, market_config):
 
 def get_transactions(strategy):
     transactions = strategy.analyzers.transactions.get_analysis()
-    return OrderedDict([(str(date), data) for date, data in transactions.items()])
+    parsed = dict()
+    for date, row in transactions.items():
+        dt = date.timestamp()
+        parsed[dt] = dict()
+        for cell in row:
+            parsed[dt][cell[3]] = dict(
+                position_size=cell[0],
+                fill_price=cell[1],
+                id=cell[2],
+                symbol=cell[3],
+                position_value=cell[4],
+            )
+    return parsed
 
 
-def get_positions_value(strategy):
+def get_positions(strategy, transactions):
     positions_value = strategy.analyzers.positionsvalue.get_analysis()
-    return OrderedDict([(str(date), data) for date, data in positions_value.items()])
 
+    positions = dict()
+    symbols = positions_value.pop("Datetime")
+    old_dt = None
+    for date, row in positions_value.items():
+        dt = date.timestamp()
+        positions[dt] = dict()
 
-def get_positions_size(positions_value, transactions):
-    # https://community.backtrader.com/topic/1454/getposition-size-inside-bt-observer
-    positions_size = OrderedDict()
-    # Header
-    positions_size["Datetime"] = list(positions_value["Datetime"])
-    prev_date = ""
-    index = dict(
-        [(symbol, idx) for idx, symbol in enumerate(positions_value["Datetime"])]
-    )
+        # Create dict for symbol at date
+        for idx, cell in enumerate(row):
+            positions[dt][symbols[idx]] = dict()
 
-    for i, date in enumerate(positions_value.keys()):
-        if i == 0:
-            # Skip header
-            continue
-        if i == 1:
-            # First tick
-            positions_size[date] = [0 for symbol in positions_size["Datetime"]]
-            prev_date = date
-        if i > 1:
-            # All following ticks
-            positions_size[date] = [v for v in positions_size[prev_date]]
-            prev_date = date
-        for transaction in transactions.get(date, []):
-            size = transaction[0]
-            symbol = transaction[3]
-            positions_size[date][index[symbol]] += size
+        # Parse position value
+        for idx, cell in enumerate(row):
+            positions[dt][symbols[idx]]["value"] = value = cell
+        # Parse position size
+        for symbol in symbols:
+            old_size = positions.get(old_dt, {}).get(symbol, {}).get("size", 0)
+            new_row = transactions.get(dt, {})
+            new_cell = new_row.get(symbol, {})
+            new_size = new_cell.get("position_size", 0)
+            positions[dt][symbol]["size"] = old_size + new_size
 
-    return positions_size
+        old_dt = dt
+
+    return positions
 
 
 def get_broker(strategy):

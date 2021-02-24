@@ -12,7 +12,7 @@ sma_env_docs = Node(
         Parameter(key="period", label="Period", ui=IntegerUI()),
         Parameter(key="percent", label="Band Percent", ui=FloatUI(default=2.5)),
     ],
-    inputs=[Input(key="inp")],
+    inputs=[Input(key="input0")],
     outputs=[
         Output(label="SMA", key="sma"),
         Output(label="Top", key="top"),
@@ -21,5 +21,5 @@ sma_env_docs = Node(
 )
 
 
-def sma_env(inp, period, percent=2.5):
-    return btind.SMAEnvelope(inp, period=period, perc=percent)
+def sma_env(input0, period, percent=2.5):
+    return btind.SMAEnvelope(input0, period=period, perc=percent)

@@ -5,6 +5,7 @@ from ._and_logic import and_logic, and_logic_docs
 from ._any_n import any_n, any_n_docs
 from ._constant import constant, constant_docs
 from ._crossover import crossover, crossover_docs
+from ._default_value import default_value, default_value_docs
 from ._lookback import lookback, lookback_docs
 from ._math import math, math_docs
 from ._or_logic import or_logic, or_logic_docs
@@ -30,5 +31,6 @@ fundamental_module = Module(
         switch_docs,
         constant_docs,
         accumulate_docs,
+        default_value_docs,
     ],
 )

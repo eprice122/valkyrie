@@ -22,7 +22,7 @@ macd_docs = Node(
 )
 
 
-def macd(input0, short_period: int, long_period: int, signal: int):
+def macd(input0, short_period: int = 12, long_period: int = 26, signal: int = 9):
     return btind.MACDHisto(
         input0, period_me1=short_period, period_me2=long_period, period_signal=signal,
     )

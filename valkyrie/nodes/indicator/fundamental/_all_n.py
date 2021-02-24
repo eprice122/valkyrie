@@ -25,4 +25,4 @@ all_n_docs = Node(
 
 
 def all_n(input0, period):
-    return AllN(input0=inp, period=period)
+    return AllN(input0=input0, period=period)

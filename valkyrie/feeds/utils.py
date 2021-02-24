@@ -1,5 +1,7 @@
 import os
+from copy import deepcopy
 from datetime import datetime, timedelta
+from random import randrange
 
 import numpy as np
 import pandas as pd
@@ -59,24 +61,66 @@ def get_benchmark(from_date, to_date, timeframe, symbol="SPY"):
 
 
 def get_documents(timeframe, from_date, to_date, symbol):
-    client = MongoClient(
-        host=environ["MONGO_HOST"],
-        port=int(environ["MONGO_PORT"]),
-        username=environ["MONGO_MARKET_USER"],
-        password=environ["MONGO_MARKET_PWD"],
-        authSource="admin",
-    )
-    db = client["stockDB"]
-    if timeframe == TimeFrame.Minutes:
-        collection = db["oneMinuteTicks"]
-    elif timeframe == TimeFrame.Days:
-        collection = db["oneDayTicks"]
+    documents = list()
+    if environ.get("unittest", False):
+        current_date = deepcopy(from_date)
+        while current_date < to_date:
+            if current_date.weekday() > 4:  # Skip Saturday and Sunday
+                pass
+
+            if timeframe == TimeFrame.Minutes:
+                documents.append(
+                    {
+                        "symbol": symbol,
+                        "open": _create_random_array(),
+                        "high": _create_random_array(),
+                        "low": _create_random_array(),
+                        "close": _create_random_array(),
+                        "volume": _create_random_array(),
+                        "date": current_date,
+                    }
+                )
+            elif timeframe == TimeFrame.Days:
+                documents.append(
+                    {
+                        "symbol": symbol,
+                        "open": _create_random(),
+                        "high": _create_random(),
+                        "low": _create_random(),
+                        "close": _create_random(),
+                        "volume": _create_random(),
+                        "date": current_date,
+                    }
+                )
+            else:
+                raise ValueError
+            current_date += timedelta(days=1)
     else:
-        raise ValueError
-    cursor = collection.find(
-        {"symbol": symbol, "date": {"$gte": from_date, "$lt": to_date}}
-    ).sort("date", 1)
-    documents = []
-    while cursor.alive:
-        documents.append(cursor.next())
+        client = MongoClient(
+            host=environ["MONGO_HOST"],
+            port=int(environ["MONGO_PORT"]),
+            username=environ["MONGO_MARKET_USER"],
+            password=environ["MONGO_MARKET_PWD"],
+            authSource="admin",
+        )
+        db = client["stockDB"]
+        if timeframe == TimeFrame.Minutes:
+            collection = db["oneMinuteTicks"]
+        elif timeframe == TimeFrame.Days:
+            collection = db["oneDayTicks"]
+        else:
+            raise ValueError
+        cursor = collection.find(
+            {"symbol": symbol, "date": {"$gte": from_date, "$lt": to_date}}
+        ).sort("date", 1)
+        while cursor.alive:
+            documents.append(cursor.next())
     return documents
+
+
+def _create_random_array():
+    return [_create_random() for _ in range(391)]  # 1 market day in minutes
+
+
+def _create_random():
+    return randrange(10, 100)

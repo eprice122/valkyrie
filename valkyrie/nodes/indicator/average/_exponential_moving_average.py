@@ -9,11 +9,11 @@ exponential_moving_average_docs = Node(
     tooltip="A Moving Average that smoothes data exponentially over time.",
     docs_path="exponential_moving_average.md",
     parameters=[Parameter(key="period", label="Period", ui=IntegerUI())],
-    inputs=[Input(key="inp")],
+    inputs=[Input(key="input0")],
     outputs=[Output()],
 )
 
 
-def exponential_moving_average(inp, period):
-    return btind.ExponentialMovingAverage(inp, period=period)
+def exponential_moving_average(input0, period):
+    return btind.ExponentialMovingAverage(input0, period=period)
 

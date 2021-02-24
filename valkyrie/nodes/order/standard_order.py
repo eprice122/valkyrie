@@ -34,19 +34,19 @@ market_order_docs = Node(
         ),
         Parameter(key="size", label="Size", ui=IntegerUI()),
     ],
-    inputs=[Input(key="inp")],
+    inputs=[Input(key="input0")],
     outputs=[],
 )
 
 
 def market_order(
-    strategy: Strategy, data, inp, side: str, size: int,
+    strategy: Strategy, data, input0, side: str, size: int,
 ):
-    if side == "BUY" and inp[0] == 1:
+    if side == "BUY" and input0[0] == 1:
         strategy.buy(
             data=data, size=size, exectype=Order.Market,
         )
-    elif side == "SELL" and inp[0] == 1:
+    elif side == "SELL" and input0[0] == 1:
         strategy.sell(
             data=data, size=size, exectype=Order.Market,
         )
@@ -67,20 +67,20 @@ stop_order_docs = Node(
         Parameter(key="size", label="Size", ui=IntegerUI()),
         Parameter(key="trigger_percent", label="Stop Percent", ui=FloatUI()),
     ],
-    inputs=[Input(key="inp")],
+    inputs=[Input(key="input0")],
     outputs=[],
 )
 
 
 def stop_order(
-    strategy: Strategy, data, inp, side: str, size: int, trigger_percent: float,
+    strategy: Strategy, data, input0, side: str, size: int, trigger_percent: float,
 ):
     price = _set_trigger_price(trigger_percent, data.close[0])
-    if side == "BUY" and inp[0] == 1:
+    if side == "BUY" and input0[0] == 1:
         strategy.buy(
             data=data, size=size, price=price, exectype=Order.Stop,
         )
-    elif side == "SELL" and inp[0] == 1:
+    elif side == "SELL" and input0[0] == 1:
         strategy.sell(
             data=data, size=size, price=price, exectype=Order.Stop,
         )
@@ -99,22 +99,22 @@ limit_order_docs = Node(
             ui=SelectorUI(options={"Buy": "BUY", "Sell": "SELL"}),
         ),
         Parameter(key="size", label="Size", ui=IntegerUI()),
-        Parameter(key="trigger_percent", label="Limit Percent", ui=FloatUI()),
+        Parameter(key="limit_percent", label="Limit Percent", ui=FloatUI()),
     ],
-    inputs=[Input(key="inp")],
+    inputs=[Input(key="input0")],
     outputs=[],
 )
 
 
 def limit_order(
-    strategy: Strategy, data, inp, side: str, size: int, trigger_percent: float,
+    strategy: Strategy, data, input0, side: str, size: int, limit_percent: float,
 ):
-    price = _set_trigger_price(trigger_percent, data.close[0])
-    if side == "BUY" and inp[0] == 1:
+    price = _set_trigger_price(limit_percent, data.close[0])
+    if side == "BUY" and input0[0] == 1:
         strategy.buy(
             data=data, size=size, price=price, exectype=Order.Limit,
         )
-    elif side == "SELL" and inp[0] == 1:
+    elif side == "SELL" and input0[0] == 1:
         strategy.sell(
             data=data, size=size, price=price, exectype=Order.Limit,
         )
@@ -136,7 +136,7 @@ stop_limit_order_docs = Node(
         Parameter(key="trigger_percent", label="Stop Percent", ui=FloatUI()),
         Parameter(key="limit_percent", label="Limit Percent", ui=FloatUI()),
     ],
-    inputs=[Input(key="inp")],
+    inputs=[Input(key="input0")],
     outputs=[],
 )
 
@@ -144,7 +144,7 @@ stop_limit_order_docs = Node(
 def stop_limit_order(
     strategy: Strategy,
     data,
-    inp,
+    input0,
     side: str,
     size: int,
     trigger_percent: float,
@@ -152,11 +152,11 @@ def stop_limit_order(
 ):
     price = _set_trigger_price(trigger_percent, data.close[0])
     plimit = _set_trigger_price(limit_percent, data.close[0])
-    if side == "BUY" and inp[0] == 1:
+    if side == "BUY" and input0[0] == 1:
         strategy.buy(
             data=data, size=size, price=price, plimit=plimit, exectype=Order.StopLimit,
         )
-    elif side == "SELL" and inp[0] == 1:
+    elif side == "SELL" and input0[0] == 1:
         strategy.sell(
             data=data, size=size, price=price, plimit=plimit, exectype=Order.StopLimit,
         )
@@ -177,20 +177,20 @@ stop_trail_docs = Node(
         Parameter(key="size", label="Size", ui=IntegerUI()),
         Parameter(key="trail_percent", label="Trail Percent", ui=FloatUI()),
     ],
-    inputs=[Input(key="inp")],
+    inputs=[Input(key="input0")],
     outputs=[],
 )
 
 
 def stop_trail(
-    strategy: Strategy, data, inp, side: str, size: int, trail_percent: float,
+    strategy: Strategy, data, input0, side: str, size: int, trail_percent: float,
 ):
     trail_percent = _set_stop_trail_trigger(trail_percent)
-    if side == "BUY" and inp[0] == 1:
+    if side == "BUY" and input0[0] == 1:
         strategy.buy(
             data=data, size=size, trailpercent=trail_percent, exectype=Order.StopTrail,
         )
-    elif side == "SELL" and inp[0] == 1:
+    elif side == "SELL" and input0[0] == 1:
         strategy.sell(
             data=data, size=size, trailpercent=trail_percent, exectype=Order.StopTrail,
         )
@@ -234,7 +234,7 @@ market_bracket_order_docs = Node(
         ),
         Parameter(key="lower_trigger", label="Lower Trigger", ui=FloatUI()),
     ],
-    inputs=[Input(key="inp")],
+    inputs=[Input(key="input0")],
     outputs=[],
 )
 
@@ -242,7 +242,7 @@ market_bracket_order_docs = Node(
 def market_bracket_order(
     strategy: Strategy,
     data,
-    inp,
+    input0,
     side,
     size,
     upper_type,
@@ -258,9 +258,9 @@ def market_bracket_order(
         lower_type=lower_type,
         lower_trigger=lower_trigger,
     )
-    if side == "BUY" and inp[0] == 1:
+    if side == "BUY" and input0[0] == 1:
         strategy.buy_bracket(data=data, size=size, **kwargs)
-    elif side == "SELL" and inp[0] == 1:
+    elif side == "SELL" and input0[0] == 1:
         strategy.sell_bracket(data=data, size=size, **kwargs)
 
 
@@ -303,7 +303,7 @@ limit_bracket_order_docs = Node(
         ),
         Parameter(key="lower_trigger", label="Lower Trigger", ui=FloatUI()),
     ],
-    inputs=[Input(key="inp")],
+    inputs=[Input(key="input0")],
     outputs=[],
 )
 
@@ -311,7 +311,7 @@ limit_bracket_order_docs = Node(
 def limit_bracket_order(
     strategy: Strategy,
     data,
-    inp,
+    input0,
     side,
     size,
     upper_type,
@@ -329,9 +329,9 @@ def limit_bracket_order(
         lower_type=lower_type,
         lower_trigger=lower_trigger,
     )
-    if side == "BUY" and inp[0] == 1:
+    if side == "BUY" and input0[0] == 1:
         strategy.buy_bracket(data=data, size=size, **kwargs)
-    elif side == "SELL" and inp[0] == 1:
+    elif side == "SELL" and input0[0] == 1:
         strategy.sell_bracket(data=data, size=size, **kwargs)
 
 
