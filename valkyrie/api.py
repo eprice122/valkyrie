@@ -52,6 +52,18 @@ class Strategy(bt.Strategy):
                 self.ctx[data.symbol][constructor["id"]] = indicator
         logger.info("Starting runtime logic")
 
+    def prenext(self):
+        self._check_session_aborted()
+        prc = (len(self.data.close) - 1) / len(self.data.close.array)
+        if prc - self.percent_done >= 0.1:
+            self.percent_done = prc
+            logger.info(
+                f"Runtime logic completion - {int(self.percent_done * 10) * 10}%"
+            )
+        for data in self.datas:
+            for order in self.orders[data.symbol]:
+                order(data)
+
     def next(self):
         self._check_session_aborted()
         prc = (len(self.data.close) - 1) / len(self.data.close.array)

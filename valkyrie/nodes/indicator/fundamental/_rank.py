@@ -15,4 +15,4 @@ rank_docs = Node(
 
 
 def rank(input0, period):
-    return btind.PercentRank()
+    return btind.PercentRank(period=period)

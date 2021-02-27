@@ -283,3 +283,23 @@ class TestFundamental(TestCase):
         }
 
         results = use_api([market, node])
+
+    def test_absolute_value(self):
+        market = use_market_node(_MARKET_ID)
+        node = {
+            "node_str": "absolute_value",
+            "module_str": _MODULE_NAME,
+            "id": uuid4(),
+            "type": _MODULE_TYPE,
+            "parameters": {},
+            "inputs": {
+                "input0": {
+                    "value": [{"port_id": "close", "node_id": _MARKET_ID,},],
+                    "key": "input0",
+                    "multi": False,
+                },
+            },
+            "outputs": ["null"],
+        }
+
+        results = use_api([market, node])

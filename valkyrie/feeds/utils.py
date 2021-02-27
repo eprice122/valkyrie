@@ -61,6 +61,13 @@ def get_benchmark(from_date, to_date, timeframe, symbol="SPY"):
 
 
 def get_documents(timeframe, from_date, to_date, symbol):
+    from_date = datetime.fromtimestamp(0, timezone.utc).replace(
+        year=from_date.year, month=from_date.month, day=from_date.day
+    )
+    to_date = datetime.fromtimestamp(0, timezone.utc).replace(
+        year=to_date.year, month=to_date.month, day=to_date.day
+    )
+
     documents = list()
     if environ.get("unittest", False):
         current_date = deepcopy(from_date)

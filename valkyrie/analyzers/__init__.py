@@ -6,6 +6,7 @@ import backtrader as bt
 import backtrader.analyzers as btanalyzers
 import pandas as pd
 import quantstats as qs
+from backtrader import date2num
 
 from ..feeds.utils import get_benchmark
 from .cash_market import CashMarket
@@ -48,7 +49,7 @@ def get_transactions(strategy):
     transactions = strategy.analyzers.transactions.get_analysis()
     parsed = dict()
     for date, row in transactions.items():
-        dt = date.timestamp()
+        dt = date2num(date)
         parsed[dt] = dict()
         for cell in row:
             parsed[dt][cell[3]] = dict(
@@ -68,7 +69,7 @@ def get_positions(strategy, transactions):
     symbols = positions_value.pop("Datetime")
     old_dt = None
     for date, row in positions_value.items():
-        dt = date.timestamp()
+        dt = date2num(date)
         positions[dt] = dict()
 
         # Create dict for symbol at date

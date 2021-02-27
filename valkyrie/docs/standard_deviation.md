@@ -1,6 +1,6 @@
-# Standard Deviation
+# Standard Deviation (SD)
 
-The standard deviation (SD) measures the spread of the dataset. This indicator is used to measure the volitility of the input and can give incite to risk.
+The standard deviation measures the spread of the dataset. This indicator is used to measure the volitility of the input and can give incite to risk.
 
 * Large SD = higher volitility
 

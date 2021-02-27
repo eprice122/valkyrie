@@ -220,6 +220,4 @@ if __name__ == "__main__":
             "MONGO_MARKET_PWD": os.environ["MONGO_MARKET_PWD"],
         },
     )
-    y = results["results"]["F"]["6"]
 
-    x = 0

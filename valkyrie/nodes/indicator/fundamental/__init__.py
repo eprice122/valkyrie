@@ -1,4 +1,5 @@
 from ...entities import Color, Module
+from ._absolute_value import absolute_value, absolute_value_docs
 from ._accumulate import accumulate, accumulate_docs
 from ._all_n import all_n, all_n_docs
 from ._and_logic import and_logic, and_logic_docs
@@ -32,5 +33,6 @@ fundamental_module = Module(
         constant_docs,
         accumulate_docs,
         default_value_docs,
+        absolute_value_docs,
     ],
 )

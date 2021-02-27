@@ -25,6 +25,8 @@ class DefaultValue(bt.Indicator):
         self.value = value
 
     def next(self):
+        inp0 = self.input0.array
+        dst = self.array
         dst[i] = self.value if math.isnan(inp0[0]) else inp0[0]
 
     def once(self, start, end):
