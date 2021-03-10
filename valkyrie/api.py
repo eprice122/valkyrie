@@ -93,21 +93,11 @@ def api(
     env: dict = dict(),
 ):
     graph = dict((constructor["id"], constructor) for constructor in graph)
-
     environ.update(env)
-    execution_time = time.time()
-    data: Dict[str, Any] = dict(
-        {
-            "execution_time": execution_time,
-            "id": task_id,
-            "symbols": market_config.symbols,
-        }
-    )
     try:
+        # Configure cerebro
         cerebro: bt.Cerebro = bt.Cerebro()
-
         cerebro.addstrategy(Strategy, graph=graph, interupt_handler=interupt_handler)
-
         configure_market(cerebro, market_config, interupt_handler)
         configure_broker(cerebro, broker_config)
         add_analyzers(cerebro)
@@ -116,20 +106,22 @@ def api(
         logger.info("Running cerebro")
         strategies = cerebro.run(tradehistory=True)
 
-        analyzers = get_analyzers(strategy=strategies[0], market_config=market_config)
-
-        data["market"] = get_market(cerebro)
-
-        completion_time = time.time()
-        data["dates"] = [
+        # Store results
+        result = dict()
+        result["market"] = get_market(cerebro)
+        result["analyzers"] = get_analyzers(
+            strategy=strategies[0], market_config=market_config
+        )
+        result["dates"] = [
             str(num2date(cerebro.datas[0].datetime[-i]))
             for i in reversed(range(0, len(cerebro.datas[0])))
         ]
 
+        # Store node data
         ctx = strategies[0].ctx
-        results: Dict[str, Dict[str, Dict[str, list]]] = dict()
+        data: Dict[str, Dict[str, Dict[str, list]]] = dict()
         for symbol, nodes in ctx.items():
-            results[symbol] = dict()
+            data[symbol] = dict()
             for id, node in nodes.items():
                 if interupt_handler.is_set():
                     raise InterruptedError
@@ -143,27 +135,15 @@ def api(
                             getattr(node, out)[-i]
                             for i in reversed(range(0, len(node)))
                         ]
-                results[symbol][id] = body
-
-        data["results"] = results
-        data["analyzers"] = analyzers
-        data["node_ids"] = [node["id"] for node in graph.values()]
+                data[symbol][id] = body
+        result["data"] = data
 
     except InterruptedError:
         logger.info("Session Aborted")
         raise InterruptedError
     except Exception as e:
         logger.error("Session Failed")
-        error = dict()
-        error["traceback"] = traceback.format_exc()
-        error["message"] = str(e)
-        data["error"] = error
         logger.error(e)
         logger.error(traceback.format_exc())
         raise e
-
-    completion_time = time.time()
-    data["completion_time"] = completion_time
-
-    logger.info(f"Completed in {completion_time - execution_time} seconds")
-    return data
+    return result
