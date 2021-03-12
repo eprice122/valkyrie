@@ -2,17 +2,8 @@ from datetime import datetime, timedelta
 
 from backtrader import Order, Strategy
 
-from ..entities import (
-    Color,
-    FloatUI,
-    Input,
-    IntegerUI,
-    Module,
-    Node,
-    Output,
-    Parameter,
-    SelectorUI,
-)
+from ..entities import (Color, FloatUI, Input, IntegerCheckUI, Module, Node,
+                        Output, Parameter, SelectorUI)
 
 LIMIT_ORDER = 0
 STOP_ORDER = 1
@@ -30,9 +21,9 @@ market_order_docs = Node(
         Parameter(
             key="side",
             label="Side",
-            ui=SelectorUI(options={"Buy": "BUY", "Sell": "SELL"}),
+            ui=SelectorUI(options={"Buy": "BUY", "Sell": "SELL",}),
         ),
-        Parameter(key="size", label="Size", ui=IntegerUI()),
+        Parameter(key="size", label="Size", ui=IntegerCheckUI(label="Close Position")),
     ],
     inputs=[Input(key="input0")],
     outputs=[],
@@ -43,10 +34,14 @@ def market_order(
     strategy: Strategy, data, input0, side: str, size: int,
 ):
     if side == "BUY" and input0[0] == 1:
+        if size == True:
+            size = strategy.getposition(data).size
         strategy.buy(
             data=data, size=size, exectype=Order.Market,
         )
     elif side == "SELL" and input0[0] == 1:
+        if size == True:
+            size = strategy.getposition(data).size
         strategy.sell(
             data=data, size=size, exectype=Order.Market,
         )
@@ -64,7 +59,7 @@ stop_order_docs = Node(
             label="Side",
             ui=SelectorUI(options={"Buy": "BUY", "Sell": "SELL"}),
         ),
-        Parameter(key="size", label="Size", ui=IntegerUI()),
+        Parameter(key="size", label="Size", ui=IntegerCheckUI(label="Close Position")),
         Parameter(key="trigger_percent", label="Stop Percent", ui=FloatUI()),
     ],
     inputs=[Input(key="input0")],
@@ -73,7 +68,7 @@ stop_order_docs = Node(
 
 
 def stop_order(
-    strategy: Strategy, data, input0, side: str, size: int, trigger_percent: float,
+    strategy: Strategy, data, input0, side: str, trigger_percent: float, size: int,
 ):
     price = _set_trigger_price(trigger_percent, data.close[0])
     if side == "BUY" and input0[0] == 1:
@@ -98,7 +93,7 @@ limit_order_docs = Node(
             label="Side",
             ui=SelectorUI(options={"Buy": "BUY", "Sell": "SELL"}),
         ),
-        Parameter(key="size", label="Size", ui=IntegerUI()),
+        Parameter(key="size", label="Size", ui=IntegerCheckUI(label="Close Position")),
         Parameter(key="limit_percent", label="Limit Percent", ui=FloatUI()),
     ],
     inputs=[Input(key="input0")],
@@ -107,7 +102,7 @@ limit_order_docs = Node(
 
 
 def limit_order(
-    strategy: Strategy, data, input0, side: str, size: int, limit_percent: float,
+    strategy: Strategy, data, input0, side: str, limit_percent: float, size: int,
 ):
     price = _set_trigger_price(limit_percent, data.close[0])
     if side == "BUY" and input0[0] == 1:
@@ -132,7 +127,7 @@ stop_limit_order_docs = Node(
             label="Side",
             ui=SelectorUI(options={"Buy": "BUY", "Sell": "SELL"}),
         ),
-        Parameter(key="size", label="Size", ui=IntegerUI()),
+        Parameter(key="size", label="Size", ui=IntegerCheckUI(label="Close Position")),
         Parameter(key="trigger_percent", label="Stop Percent", ui=FloatUI()),
         Parameter(key="limit_percent", label="Limit Percent", ui=FloatUI()),
     ],
@@ -146,9 +141,9 @@ def stop_limit_order(
     data,
     input0,
     side: str,
-    size: int,
     trigger_percent: float,
     limit_percent: float,
+    size: int,
 ):
     price = _set_trigger_price(trigger_percent, data.close[0])
     plimit = _set_trigger_price(limit_percent, data.close[0])
@@ -174,7 +169,7 @@ stop_trail_docs = Node(
             label="Side",
             ui=SelectorUI(options={"Buy": "BUY", "Sell": "SELL"}),
         ),
-        Parameter(key="size", label="Size", ui=IntegerUI()),
+        Parameter(key="size", label="Size", ui=IntegerCheckUI(label="Close Position")),
         Parameter(key="trail_percent", label="Trail Percent", ui=FloatUI()),
     ],
     inputs=[Input(key="input0")],
@@ -183,7 +178,7 @@ stop_trail_docs = Node(
 
 
 def stop_trail(
-    strategy: Strategy, data, input0, side: str, size: int, trail_percent: float,
+    strategy: Strategy, data, input0, side: str, trail_percent: float, size: int,
 ):
     trail_percent = _set_stop_trail_trigger(trail_percent)
     if side == "BUY" and input0[0] == 1:
@@ -208,7 +203,7 @@ market_bracket_order_docs = Node(
             label="Side",
             ui=SelectorUI(options={"Buy": "BUY", "Sell": "SELL"}),
         ),
-        Parameter(key="size", label="Size", ui=IntegerUI()),
+        Parameter(key="size", label="Size", ui=IntegerCheckUI(label="Close Position")),
         Parameter(
             key="upper_type",
             label="Upper Type",
@@ -276,7 +271,7 @@ limit_bracket_order_docs = Node(
             label="Side",
             ui=SelectorUI(options={"Buy": "BUY", "Sell": "SELL"}),
         ),
-        Parameter(key="size", label="Size", ui=IntegerUI()),
+        Parameter(key="size", label="Size", ui=IntegerCheckUI(label="Close Position")),
         Parameter(key="middle_trigger", label="Limit Price", ui=FloatUI()),
         Parameter(
             key="upper_type",

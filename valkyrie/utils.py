@@ -24,6 +24,7 @@ def build_indicator(strategy, data, constructor: dict, nodes: dict):
 
     if len(constructor["inputs"].items()) == 0:
         kwargs["data"] = data
+        kwargs["strategy"] = strategy
 
     indicator = parse_indicator(
         module_str=constructor["module_str"], node_str=constructor["node_str"]

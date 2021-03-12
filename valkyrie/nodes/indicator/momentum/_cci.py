@@ -17,5 +17,5 @@ cci_docs = Node(
 )
 
 
-def cci(data, period: int, factor: float = 0.015):
+def cci(strategy, data, period: int, factor: float = 0.015):
     return btind.CommodityChannelIndex(data, period=period, factor=factor)

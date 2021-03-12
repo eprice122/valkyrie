@@ -14,5 +14,5 @@ constant_docs = Node(
 )
 
 
-def constant(data, value):
+def constant(strategy, data, value):
     return bt.If(True, value, None)

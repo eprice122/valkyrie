@@ -8,6 +8,7 @@ ASSESS_NODE = "ASSESS_NODE"
 BROKER_NODE = "BROKER_NODE"
 
 UI_INT = "UI_INT"
+UI_INT_CHECK = "UI_INT_CHECK"
 UI_FLOAT = "UI_FLOAT"
 UI_STRING = "UI_STRING"
 UI_BOOL = "UI_BOOL"
@@ -46,6 +47,15 @@ class IntegerUI(UI):
     def __init__(self, constraints: Constraints = None, default: Optional[int] = None):
         super().__init__(type=UI_INT, default=default)
         self.constraints = constraints
+
+
+class IntegerCheckUI(UI):
+    def __init__(
+        self, label, constraints: Constraints = None, default: Optional[int] = None,
+    ):
+        super().__init__(type=UI_INT_CHECK, default=default)
+        self.constraints = constraints
+        self.label = label
 
 
 class FloatUI(UI):

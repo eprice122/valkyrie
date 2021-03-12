@@ -35,6 +35,16 @@
             "justMyCode": true
         },
         {
+            "name": "Python: Doc Builder",
+            "type": "python",
+            "request": "launch",
+            "program": "doc_builder.py",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "sudo": false,
+            "justMyCode": true
+        },
+        {
             "name": "Bash-Debug File",
             "type": "bashdb",
             "request": "launch",
