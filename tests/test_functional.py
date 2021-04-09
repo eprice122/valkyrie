@@ -86,7 +86,7 @@ class TestFunctional(TestCase):
             "module_str": "standard_order",
             "id": uuid4(),
             "type": "ORDER_NODE",
-            "parameters": {"side": "SELL",},
+            "parameters": {"side": "SELL", "size": 10,},
             "inputs": {
                 "input0": {
                     "value": [{"port_id": "null", "node_id": "cross1",},],
