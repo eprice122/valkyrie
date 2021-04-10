@@ -2,6 +2,7 @@
 
 _The official wrapper api for [Hedgehog.market](https://hedgehog.market) to convert indicator graphs into python scripts [Backtrader](https://www.backtrader.com)._
 
+<img src=https://github.com/eprice122/valkyrie/actions/workflows/tests.yml/badge.svg>
 
 ## Current Indicators Available
 
