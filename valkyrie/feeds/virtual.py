@@ -4,7 +4,6 @@ from threading import Event
 
 from backtrader import TimeFrame, date2num
 from backtrader.feed import DataBase
-from pymongo import MongoClient
 
 from .utils import get_documents
 

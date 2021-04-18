@@ -1,9 +1,19 @@
 from datetime import datetime, timedelta
+from typing import Union
 
 from backtrader import Order, Strategy
 
-from ..entities import (Color, FloatUI, Input, IntegerCheckUI, Module, Node,
-                        Output, Parameter, SelectorUI)
+from ..entities import (
+    Color,
+    FloatUI,
+    Input,
+    IntegerCheckUI,
+    Module,
+    Node,
+    Output,
+    Parameter,
+    SelectorUI,
+)
 
 LIMIT_ORDER = 0
 STOP_ORDER = 1
@@ -31,17 +41,15 @@ market_order_docs = Node(
 
 
 def market_order(
-    strategy: Strategy, data, input0, side: str, size: int,
+    strategy: Strategy, data, input0, side: str, size: Union[int, bool],
 ):
+    if size == True:
+        size = strategy.getposition(data).size
     if side == "BUY" and input0[0] == 1:
-        if size == True:
-            size = strategy.getposition(data).size
         strategy.buy(
             data=data, size=size, exectype=Order.Market,
         )
     elif side == "SELL" and input0[0] == 1:
-        if size == True:
-            size = strategy.getposition(data).size
         strategy.sell(
             data=data, size=size, exectype=Order.Market,
         )
@@ -68,9 +76,16 @@ stop_order_docs = Node(
 
 
 def stop_order(
-    strategy: Strategy, data, input0, side: str, trigger_percent: float, size: int,
+    strategy: Strategy,
+    data,
+    input0,
+    side: str,
+    trigger_percent: float,
+    size: Union[int, bool],
 ):
     price = _set_trigger_price(trigger_percent, data.close[0])
+    if size == True:
+        size = strategy.getposition(data).size
     if side == "BUY" and input0[0] == 1:
         strategy.buy(
             data=data, size=size, price=price, exectype=Order.Stop,
@@ -102,9 +117,16 @@ limit_order_docs = Node(
 
 
 def limit_order(
-    strategy: Strategy, data, input0, side: str, limit_percent: float, size: int,
+    strategy: Strategy,
+    data,
+    input0,
+    side: str,
+    limit_percent: float,
+    size: Union[int, bool],
 ):
     price = _set_trigger_price(limit_percent, data.close[0])
+    if size == True:
+        size = strategy.getposition(data).size
     if side == "BUY" and input0[0] == 1:
         strategy.buy(
             data=data, size=size, price=price, exectype=Order.Limit,
@@ -143,10 +165,12 @@ def stop_limit_order(
     side: str,
     trigger_percent: float,
     limit_percent: float,
-    size: int,
+    size: Union[int, bool],
 ):
     price = _set_trigger_price(trigger_percent, data.close[0])
     plimit = _set_trigger_price(limit_percent, data.close[0])
+    if size == True:
+        size = strategy.getposition(data).size
     if side == "BUY" and input0[0] == 1:
         strategy.buy(
             data=data, size=size, price=price, plimit=plimit, exectype=Order.StopLimit,
@@ -178,9 +202,16 @@ stop_trail_docs = Node(
 
 
 def stop_trail(
-    strategy: Strategy, data, input0, side: str, trail_percent: float, size: int,
+    strategy: Strategy,
+    data,
+    input0,
+    side: str,
+    trail_percent: float,
+    size: Union[int, bool],
 ):
     trail_percent = _set_stop_trail_trigger(trail_percent)
+    if size == True:
+        size = strategy.getposition(data).size
     if side == "BUY" and input0[0] == 1:
         strategy.buy(
             data=data, size=size, trailpercent=trail_percent, exectype=Order.StopTrail,
@@ -253,6 +284,8 @@ def market_bracket_order(
         lower_type=lower_type,
         lower_trigger=lower_trigger,
     )
+    if size == True:
+        size = strategy.getposition(data).size
     if side == "BUY" and input0[0] == 1:
         strategy.buy_bracket(data=data, size=size, **kwargs)
     elif side == "SELL" and input0[0] == 1:
@@ -324,6 +357,8 @@ def limit_bracket_order(
         lower_type=lower_type,
         lower_trigger=lower_trigger,
     )
+    if size == True:
+        size = strategy.getposition(data).size
     if side == "BUY" and input0[0] == 1:
         strategy.buy_bracket(data=data, size=size, **kwargs)
     elif side == "SELL" and input0[0] == 1:
